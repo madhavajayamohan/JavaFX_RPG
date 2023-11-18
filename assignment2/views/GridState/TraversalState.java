@@ -360,7 +360,6 @@ public class TraversalState extends GridStateWithItems
         //finally, articulate the description
         if (textToDisplay == null || textToDisplay.isBlank()) view.articulateRoomDescription();
     }
-
     /**
      * formatText
      * __________________________
