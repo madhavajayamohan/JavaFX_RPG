@@ -48,10 +48,10 @@ public class AdventureGameView {
     public AdventureGame model; //model of the game
     public Stage stage; //stage on which all is rendered
 
-    public GridState[] allStates = new GridState[3];
-    public Scene[] allScenes = new Scene[3];
-    public GridState currState;
-    public GridPane currGrid;
+    public GridState[] allStates = new GridState[3]; //Contains all possible gridStates
+    public Scene[] allScenes = new Scene[3]; //Contains all possible scenes
+    public GridState currState; //This is the current GridState of the game
+    public GridPane currGrid; //This is the currently displayed GridPane
 
     private MediaPlayer mediaPlayer; //to play audio
     private boolean mediaPlaying; //to know if the audio is playing
@@ -134,17 +134,30 @@ public class AdventureGameView {
         }
     }
 
+    /**
+     * Updates the GridPane after any changes
+     */
     public void updateScene(String textToDisplay)
     {
         currState.updateScene(textToDisplay);
     }
 
+    /**
+     * Updates the items of the GridPane if it is the
+     * TraversalState or the InventoryState
+     */
     public void updateItems()
     {
         if(currState instanceof GridStateWithItems)
             ((GridStateWithItems) currState).updateItems();
     }
 
+    /**
+     * @param s: Name of the changeState
+     * Changes the value of currState and currGrid, and changes
+     * the current Scene to the scene based on currGrid.
+     * The state to change to is determined by the paramter s
+     */
     public void changeState(String s)
     {
         stopArticulation();

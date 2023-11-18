@@ -12,13 +12,17 @@ import javafx.scene.text.Font;
 import views.AdventureGameView;
 import views.GridState.GridState;
 
+/**
+ * SettingsState. Models the Settings screen game.
+ */
 public class SettingsState extends GridState
 {
 
-    public Slider brightnessControl;
-    public ComboBox backgroundThemeChanger;
+    public Slider brightnessControl; //Slider to change brightness
+    public ComboBox backgroundThemeChanger; //Combo box to change background color
 
     public Button enlargeButton, minimizeButton, highContrastButton, exitButton;
+    //Button to enlarge text, minimize text, change into high contrast most, and go back to Traversal Screen
     public Label brightnessLabel, backgroundLabel, textLabel, contrastLabel;
     public boolean highContrastModeOn = false;
 
@@ -171,6 +175,9 @@ public class SettingsState extends GridState
         // To be added to
     }
 
+    /**
+     * Adds a mouse event to exitButton
+     */
     public void addExitEvent() {
         exitButton.setOnAction(e -> {
             grid.requestFocus();
@@ -178,16 +185,25 @@ public class SettingsState extends GridState
         });
     }
 
+    /**
+     * Adds a slider event to brightnessControl
+     */
     public void addSliderEvent()
     {
         //To be implemented
     }
 
+    /**
+     * Adds a mouse event to the backgroundThemeChanger
+     */
     public void addBackgroundThemeEvent()
     {
         //To be implemented
     }
 
+    /**
+     * Adds a mouse event to the enlargeButton
+     */
     public void addEnlargeEvent()
     {
         enlargeButton.setOnAction(e -> {
@@ -197,6 +213,9 @@ public class SettingsState extends GridState
         });
     }
 
+    /**
+     * Adds a mouse event to the minimizeButton
+     */
     public void addMinimizeEvent()
     {
         minimizeButton.setOnAction(e -> {
@@ -206,6 +225,9 @@ public class SettingsState extends GridState
         });
     }
 
+    /**
+     * Adds a mouse event to the highContrastButton
+     */
     public void addContrastEvent()
     {
         //To be implemented

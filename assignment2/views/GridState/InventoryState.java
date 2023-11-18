@@ -14,13 +14,16 @@ import views.GridState.GridState;
 
 import java.util.ArrayList;
 
+/**
+ * Class InventoryState. The class models the Inventory Screen in the game.
+ */
 public class InventoryState extends GridStateWithItems
 {
     VBox objectsInInventory = new VBox(); //to hold inventory items
     VBox powerUps; //to hold accrued power-ups
     VBox achievements; //to hold any achievements
 
-    Button exitButton;
+    Button exitButton; //button to return back to Traversal Screen
 
     Label objLabel, inventoryLabel, powerUpLabel, achivementLabel;
 
@@ -146,16 +149,25 @@ public class InventoryState extends GridStateWithItems
         grid.add(scO,0,2, 1, 1);
     }
 
+    /**
+     * Updates PowerUps
+     */
     public void updatePowerUps()
     {
         // To be implemented
     }
 
+    /**
+     * Updates Acehievements
+     */
     public void updateAchievements()
     {
         // To be implemented
     }
 
+    /**
+     * Adds a mouse event to the Exit Button
+     */
     public void addExitEvent() {
         exitButton.setOnAction(e -> {
             grid.requestFocus();
