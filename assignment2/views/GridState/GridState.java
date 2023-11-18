@@ -12,7 +12,7 @@ public abstract class GridState
     public GridPane grid = new GridPane();
     public AdventureGameView view;
     public static double brightness = 0.0;
-    public static double textSize = 15;
+    public static double textSize = 16;
 
     /**
      * Initialize the UI
@@ -29,10 +29,7 @@ public abstract class GridState
         return grid;
     }
 
-    public void updateScene(String s)
-    {
-
-    }
+    abstract public void updateScene(String s);
 
     void customizeButton(Button inputButton, int w, int h) {
         inputButton.setPrefSize(w, h);
