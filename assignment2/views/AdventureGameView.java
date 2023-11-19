@@ -29,8 +29,10 @@ import views.GridState.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 
 /**
@@ -93,6 +95,7 @@ public class AdventureGameView {
         this.stage.setResizable(false);
         this.stage.show();
 
+        autoSave();
     }
 
     public static void makeButtonAccessible(Button inputButton, String name, String shortString, String longString) {
@@ -175,6 +178,29 @@ public class AdventureGameView {
         this.stage.setScene(allScenes[index]);
         this.stage.setResizable(false);
         this.stage.show();
+    }
+
+    /**
+     * This method handles the event related to the
+     * player pressing the exit program button on the top right corner.
+     */
+    public void autoSave() {
+        stage.setOnCloseRequest(e -> {
+            String gameName = "Autosave " + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + ".ser";
+            String separator = File.separator;
+            File save = new File("Games" + separator + "AutoSaves" + separator + gameName);
+            this.model.saveModel(save);
+
+
+            File[] autoSaves = new File("Games" + separator + "AutoSaves").listFiles();
+            if (autoSaves != null) {
+                Arrays.sort(autoSaves);
+                if (autoSaves.length > 10) {
+                    File temp = new File("Games" + separator + "AutoSaves" + separator + autoSaves[0].getName());
+                    System.out.println(temp.delete());
+                }
+            }
+        });
     }
 
 }
