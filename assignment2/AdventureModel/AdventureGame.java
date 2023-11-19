@@ -1,5 +1,8 @@
 package AdventureModel;
 
+import AdventureModel.Players.DefaultPlayer;
+import AdventureModel.Players.Player;
+
 import java.io.*;
 import java.util.*;
 
@@ -60,7 +63,7 @@ public class AdventureGame implements Serializable {
         loader.loadGame();
 
         // set up the player's current location
-        this.player = new Player(this.rooms.get(1));
+        this.player = new DefaultPlayer(this.rooms.get(1));
     }
 
     /**
