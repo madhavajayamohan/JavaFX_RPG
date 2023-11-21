@@ -137,7 +137,7 @@ public class AdventureGameView {
         }
     }
 
-    /**
+    /**non
      * Updates the GridPane after any changes
      */
     public void updateScene(String textToDisplay)
