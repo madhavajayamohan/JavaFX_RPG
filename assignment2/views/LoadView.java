@@ -98,11 +98,29 @@ public class LoadView {
     private void getFiles(ListView<String> listView) {
         String separator = File.separator;
         File directory = new File("Games" + separator + "Saved");
+
+        File autoSavesDir = new File("Games" + separator + "AutoSaves");
+        File[] autoSaveFiles = autoSavesDir.listFiles();
+        if (autoSaveFiles != null) {
+            if (autoSaveFiles.length == 1) {
+                listView.getItems().add(autoSaveFiles[autoSaveFiles.length - 1].getName());
+            } else if (autoSaveFiles.length == 2) {
+                listView.getItems().add(autoSaveFiles[autoSaveFiles.length - 1].getName());
+                listView.getItems().add(autoSaveFiles[autoSaveFiles.length - 2].getName());
+            } else if (autoSaveFiles.length >= 3) {
+                for (int i = 0; i < 3; i++) {
+                    listView.getItems().add(autoSaveFiles[i].getName());
+                }
+            }
+        }
+
         if (directory.exists()) {
             File files[] = directory.listFiles();
-            for (File x : files) {
-                if (x.isFile() && x.getName().endsWith(".ser")) {
-                    listView.getItems().add(x.getName());
+            if (files != null) {
+                for (File x : files) {
+                    if (x.isFile() && x.getName().endsWith(".ser")) {
+                        listView.getItems().add(x.getName());
+                    }
                 }
             }
         }
@@ -121,10 +139,16 @@ public class LoadView {
     private void selectGame(Label selectGameLabel, ListView<String> GameList) throws IOException {
         //saved games will be in the Games/Saved folder!
         String separator = File.separator;
+        String selected = GameList.getSelectionModel().getSelectedItem();
         String dir = "Games" + separator + "Saved" + separator + GameList.getSelectionModel().getSelectedItem();
         this.adventureGameView.stopArticulation();
         try {
-            this.adventureGameView.model = loadGame(dir);
+            if (selected.startsWith("Autosave")) {
+                String autoSaveDir = "Games" + separator + "AutoSaves" + separator + GameList.getSelectionModel().getSelectedItem();
+                this.adventureGameView.model = loadGame(autoSaveDir);
+            } else {
+                this.adventureGameView.model = loadGame(dir);
+            }
             this.adventureGameView.updateScene("");
             this.adventureGameView.updateItems();
             selectGameLabel.setText(GameList.getSelectionModel().getSelectedItem());
