@@ -253,7 +253,7 @@ public class TraversalState extends GridStateWithItems
         //try to move!
         String output = this.view.model.interpretAction(text); //process the command!
 
-        if (output == null || (!output.equals("GAME OVER") && !output.equals("FORCED") && !output.equals("HELP"))) {
+        if (output == null || (!output.equals("GAME OVER") && !output.equals("FORCED") && !output.equals("HELP") && !output.equals("TROLL"))) {
             updateScene(output);
             updateItems();
             for (Node x : grid.getChildren()) {
@@ -276,6 +276,9 @@ public class TraversalState extends GridStateWithItems
                 Platform.exit();
             });
             pause.play();
+        } else if (output.equals("TROLL")) {
+            this.view.inTrollGame = true;
+            this.view.changeState("Troll");
         } else if (output.equals("FORCED")) {
             //write code here to handle "FORCED" events!
             //Your code will need to display the image in the
@@ -299,7 +302,6 @@ public class TraversalState extends GridStateWithItems
                 submitEvent("FORCED");
             });
             pause.play();
-
         }
     }
 
@@ -396,7 +398,7 @@ public class TraversalState extends GridStateWithItems
         int roomNumber = this.view.model.getPlayer().getCurrentRoom().getRoomNumber();
         String roomImage = this.view.model.getDirectoryName() + "/room-images/" + roomNumber + ".png";
 
-        Image roomImageFile = new Image(roomImage);
+        Image roomImageFile = new Image(new File(roomImage).toURI().toString());
         roomImageView = new ImageView(roomImageFile);
         roomImageView.setPreserveRatio(true);
         roomImageView.setFitWidth(400);
@@ -426,7 +428,7 @@ public class TraversalState extends GridStateWithItems
         //write some code here to add images of objects in a given room to the objectsInRoom Vbox
         ArrayList<AdventureObject> roomObj = this.view.model.player.getCurrentRoom().objectsInRoom;
         for (AdventureObject x : roomObj) {
-            Image currImg = new Image(this.view.model.getDirectoryName() + "/objectImages/" + x.getName() + ".jpg");
+            Image currImg = new Image(new File(this.view.model.getDirectoryName() + "/objectImages/" + x.getName() + ".jpg").toURI().toString());
             ImageView currImgView = new ImageView(currImg);
             currImgView.setFitWidth(100);
             currImgView.setPreserveRatio(true);
