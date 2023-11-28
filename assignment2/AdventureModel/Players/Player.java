@@ -32,6 +32,11 @@ public abstract class Player implements Serializable {
     protected int defPower;
 
     /**
+     * The number of lives of the player.
+     */
+    protected int lives;
+
+    /**
      * This method adds an object into players inventory if the object is present in
      * the room and returns true. If the object is not present in the room, the method
      * returns false.
@@ -139,5 +144,25 @@ public abstract class Player implements Serializable {
      */
     public int getDefensePower() {
         return defPower;
+    }
+
+    /**
+     * This method returns the current player's lives.
+     * @return interger value for lives
+     */
+    public int getLives() { return lives; }
+
+    /**
+     * This methods increase the number of lives by 1.
+     */
+    public void increaseLives() {
+        this.lives += 1;
+    }
+
+    /**
+     * This method decreases the number of lives by 1.
+     */
+    public void decreaseLives() {
+        this.lives -= 1;
     }
 }
