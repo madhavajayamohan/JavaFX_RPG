@@ -22,5 +22,6 @@ public class DefaultPlayer extends Player {
         this.currentRoom = currentRoom;
         this.atkPower = 100;
         this.defPower = 100;
+        this.lives = 3;
     }
 }
