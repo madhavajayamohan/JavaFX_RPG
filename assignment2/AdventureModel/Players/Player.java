@@ -1,4 +1,7 @@
-package AdventureModel;
+package AdventureModel.Players;
+
+import AdventureModel.AdventureObject;
+import AdventureModel.Room;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -7,11 +10,11 @@ import java.util.ArrayList;
  * This class keeps track of the progress
  * of the player in the game.
  */
-public class Player implements Serializable {
+public abstract class Player implements Serializable {
     /**
      * The current room that the player is located in.
      */
-    private Room currentRoom;
+    protected Room currentRoom;
 
     /**
      * The list of items that the player is carrying at the moment.
@@ -19,12 +22,19 @@ public class Player implements Serializable {
     public ArrayList<AdventureObject> inventory;
 
     /**
-     * Adventure Game Player Constructor
+     * The attack power of the player.
      */
-    public Player(Room currentRoom) {
-        this.inventory = new ArrayList<AdventureObject>();
-        this.currentRoom = currentRoom;
-    }
+    protected int atkPower;
+
+    /**
+     * The defense power of the player.
+     */
+    protected int defPower;
+
+    /**
+     * The number of lives of the player.
+     */
+    protected int lives;
 
     /**
      * This method adds an object into players inventory if the object is present in
@@ -118,5 +128,41 @@ public class Player implements Serializable {
         return objects;
     }
 
+    /**
+     * This method returns the correct calculation for atkPower
+     *
+     * @return integer value for atkPower
+     */
+    public int getAttackPower() {
+        return atkPower;
+    }
 
+    /**
+     * This method returns the correct calculation for defPower
+     *
+     * @return integer value for defPower
+     */
+    public int getDefensePower() {
+        return defPower;
+    }
+
+    /**
+     * This method returns the current player's lives.
+     * @return interger value for lives
+     */
+    public int getLives() { return lives; }
+
+    /**
+     * This methods increase the number of lives by 1.
+     */
+    public void increaseLives() {
+        this.lives += 1;
+    }
+
+    /**
+     * This method decreases the number of lives by 1.
+     */
+    public void decreaseLives() {
+        this.lives -= 1;
+    }
 }

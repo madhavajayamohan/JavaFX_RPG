@@ -10,6 +10,7 @@ import javafx.scene.AccessibleRole;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -355,6 +356,9 @@ public class TraversalState extends GridStateWithItems
         settingsButton.setFont(new Font("Arial", textSize));
 
         grid.add(roomPane, 1, 1);
+        ColorAdjust bright = new ColorAdjust();
+        bright.setBrightness(brightness);
+        grid.setEffect(bright);
         this.view.stage.sizeToScene();
 
         //finally, articulate the description

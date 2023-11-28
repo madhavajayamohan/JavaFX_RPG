@@ -4,6 +4,7 @@ import AdventureModel.AdventureObject;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -147,6 +148,10 @@ public class InventoryState extends GridStateWithItems
         scO.setFitToWidth(true);
         scO.setFitToHeight(true);
         grid.add(scO,0,2, 1, 1);
+
+        ColorAdjust bright = new ColorAdjust();
+        bright.setBrightness(brightness);
+        grid.setEffect(bright);
     }
 
     /**

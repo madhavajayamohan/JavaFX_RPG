@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="MediumGame">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/Games/MediumGame.zip!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
