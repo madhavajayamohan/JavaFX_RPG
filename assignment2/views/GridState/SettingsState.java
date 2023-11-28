@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import views.AdventureGameView;
 import views.GridState.GridState;
+import javafx.scene.effect.ColorAdjust;
 
 /**
  * SettingsState. Models the Settings screen game.
@@ -25,7 +26,6 @@ public class SettingsState extends GridState
     //Button to enlarge text, minimize text, change into high contrast most, and go back to Traversal Screen
     public Label brightnessLabel, backgroundLabel, textLabel, contrastLabel;
     public boolean highContrastModeOn = false;
-
 
     public SettingsState(String name, AdventureGameView view)
     {
@@ -82,6 +82,8 @@ public class SettingsState extends GridState
         brightnessLabel.setFont(new Font("Arial", 20));
 
         brightnessControl = new Slider(-1, 1, 0);
+        brightnessControl.setMax(0.5);
+        brightnessControl.setMin(-0.5);
         addSliderEvent();
 
         VBox brightness = new VBox();
@@ -172,6 +174,10 @@ public class SettingsState extends GridState
         backgroundLabel.setFont(new Font("Arial", textSize));
         contrastLabel.setFont(new Font("Arial", textSize));
         textLabel.setFont(new Font("Arial", textSize));
+        ColorAdjust bright = new ColorAdjust();
+        bright.setBrightness(brightness);
+        this.view.currGrid.setEffect(bright);
+        grid.setEffect(bright);
         // To be added to
     }
 
@@ -191,6 +197,14 @@ public class SettingsState extends GridState
     public void addSliderEvent()
     {
         //To be implemented
+        brightnessControl.setOnMouseDragged(e -> {
+            brightness = brightnessControl.getValue();
+            updateScene("");
+        });
+        brightnessControl.setOnMouseClicked(e -> {
+            brightness = brightnessControl.getValue();
+            updateScene("");
+        });
     }
 
     /**
