@@ -93,16 +93,18 @@ public class AdventureGame implements Serializable {
      * movePlayer
      * __________________________
      * Moves the player in the given direction, if possible.
-     * Return false if the player wins or dies as a result of the move.
+     * Return 0 if the player wins or dies as a result of the move.
+     * Return 1 if the player moves
+     * Return 2 if the player is moving into a troll room
      *
      * @param direction the move command
-     * @return false, if move results in death or a win (and game is over).  Else, true.
+     * @return 0, if move results in death or a win (and game is over).  Else, true.
      */
-    public boolean movePlayer(String direction) {
+    public int movePlayer(String direction) {
 
         direction = direction.toUpperCase();
         PassageTable motionTable = this.player.getCurrentRoom().getMotionTable(); //where can we move?
-        if (!motionTable.optionExists(direction)) return true; //no move
+        if (!motionTable.optionExists(direction)) return 1; //no move
 
         ArrayList<Passage> possibilities = new ArrayList<>();
         for (Passage entry : motionTable.getDirection()) {
@@ -125,13 +127,20 @@ public class AdventureGame implements Serializable {
             } else { chosen = entry; } //the passage is unlocked
         }
 
-        if (chosen == null) return true; //doh, we just can't move.
+        if (chosen == null) return 1; //doh, we just can't move.
 
         int roomNumber = chosen.getDestinationRoom();
         Room room = this.rooms.get(roomNumber);
         this.player.setCurrentRoom(room);
 
-        return !this.player.getCurrentRoom().getMotionTable().getDirection().get(0).getDirection().equals("FORCED");
+        if(room.getRoomName().equals("Troll"))
+            return 2;
+
+        if(!this.player.getCurrentRoom().getMotionTable().getDirection().get(0).getDirection().equals("FORCED"))
+            return 1;
+
+        return 0;
+
     }
 
     /**
@@ -147,11 +156,16 @@ public class AdventureGame implements Serializable {
         PassageTable motionTable = this.player.getCurrentRoom().getMotionTable(); //where can we move?
 
         if (motionTable.optionExists(inputArray[0])) {
-            if (!movePlayer(inputArray[0])) {
+            int movePlayerResult = movePlayer(inputArray[0]);
+
+            if (movePlayerResult == 0) {
                 if (this.player.getCurrentRoom().getMotionTable().getDirection().get(0).getDestinationRoom() == 0)
                     return "GAME OVER";
                 else return "FORCED";
             } //something is up here! We are dead or we won.
+            else if(movePlayerResult == 2) {
+                return "TROLL";
+            }
             return null;
         } else if(Arrays.asList(this.actionVerbs).contains(inputArray[0])) {
             if(inputArray[0].equals("QUIT")) { return "GAME OVER"; } //time to stop!

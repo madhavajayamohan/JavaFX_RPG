@@ -11,7 +11,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.effect.ColorAdjust;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -51,10 +50,12 @@ public class AdventureGameView {
     public AdventureGame model; //model of the game
     public Stage stage; //stage on which all is rendered
 
-    public GridState[] allStates = new GridState[3]; //Contains all possible gridStates
-    public Scene[] allScenes = new Scene[3]; //Contains all possible scenes
+    public GridState[] allStates = new GridState[4]; //Contains all possible gridStates
+    public Scene[] allScenes = new Scene[4]; //Contains all possible scenes
     public GridState currState; //This is the current GridState of the game
     public GridPane currGrid; //This is the currently displayed GridPane
+
+    public boolean inTrollGame = false;
 
     private MediaPlayer mediaPlayer; //to play audio
     private boolean mediaPlaying; //to know if the audio is playing
@@ -91,6 +92,10 @@ public class AdventureGameView {
         allStates[2] = new SettingsState("Settings", this);
         allScenes[2] = new Scene(allStates[2].grid, 1000, 800);
         allScenes[2].setFill(Color.BLACK);
+
+        allStates[3] = new GameTrollState("Troll", this, this.model.getPlayer());
+        allScenes[3] = new Scene(allStates[3].grid, 1000, 800);
+        allScenes[3].setFill(Color.BLACK);
 
         this.stage.setScene(allScenes[0]);
         this.stage.setResizable(false);
@@ -138,7 +143,7 @@ public class AdventureGameView {
         }
     }
 
-    /**non
+    /**
      * Updates the GridPane after any changes
      */
     public void updateScene(String textToDisplay)
@@ -171,6 +176,8 @@ public class AdventureGameView {
             index = 1;
         else if(s.equals("Settings"))
             index = 2;
+        else if(s.equals("Troll"))
+            index = 3;
 
         currState = allStates[index];
         currGrid = currState.grid;
