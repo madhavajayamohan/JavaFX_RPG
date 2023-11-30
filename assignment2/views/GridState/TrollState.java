@@ -7,13 +7,6 @@ public abstract class TrollState extends GridState {
     public Player player;
 
     /**
-     * giveInstructions
-     * _________________________
-     * All Trolls should explain how their game is played
-     */
-    public abstract void giveInstructions();
-
-    /**
      * playGame
      * _________________________
      * Play the Trolls game
