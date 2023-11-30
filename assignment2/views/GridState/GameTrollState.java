@@ -5,10 +5,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.AccessibleRole;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -59,7 +56,8 @@ public class GameTrollState extends TrollState implements Runnable {
     ImageView roomImageView; //to hold room image
     TextField inputTextField; //for user input
 
-    ScrollPane mainScroll = new ScrollPane();
+    Label mainText = new Label();
+    ScrollPane mainScroll = new ScrollPane(mainText);
 
     boolean gameStart = false;
 
@@ -144,6 +142,14 @@ public class GameTrollState extends TrollState implements Runnable {
         topButtons.setAlignment(Pos.CENTER);
 
         //Scroll Pane for main Text
+        mainText.setStyle("-fx-text-fill: white;");
+        mainText.setFont(new Font("Arial", textSize));
+        mainText.setAlignment(Pos.TOP_CENTER);
+        mainText.setPrefWidth(700);
+        mainText.setPrefHeight(700);
+        mainText.setTextOverrun(OverrunStyle.CLIP);
+        mainText.setWrapText(true);
+
         mainScroll.setStyle("-fx-background: rgb(0,0,0)");
         grid.add(mainScroll, 1, 1, 1, 1);
 
@@ -323,13 +329,8 @@ public class GameTrollState extends TrollState implements Runnable {
         playerHPLabel.setText("Player HP: " + playerHP);
         trollHPLabel.setText("Troll HP: " + trollHP);
 
-        Text mainText = new Text();
         mainText.setText(s);
         mainText.setFont(new Font("Arial", textSize));
-        mainText.setFill(Color.WHITE);
-        mainText.setWrappingWidth(700);
-        mainScroll.setContent(mainText);
-
 
         ColorAdjust bright = new ColorAdjust();
         bright.setBrightness(brightness);
@@ -346,8 +347,8 @@ public class GameTrollState extends TrollState implements Runnable {
         while(trollHP > 0 && playerHP > 0)
         {
             commandList = new ArrayList<>();
+            System.out.println(commandList);
             updateScene(instructionText);
-
         }
 
         return false;
@@ -356,7 +357,6 @@ public class GameTrollState extends TrollState implements Runnable {
     @Override
     public void run()
     {
-
         while(commandList.size() < 2)
         {
             try {
