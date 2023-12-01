@@ -1,6 +1,11 @@
 package views.GridState;
 
+import AdventureModel.Passage;
+import AdventureModel.PassageTable;
 import AdventureModel.Players.Player;
+import AdventureModel.Room;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,22 +20,23 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import views.AdventureGameView;
 import views.LoadView;
 import views.SaveView;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 import static javafx.scene.paint.Paint.valueOf;
 
-public class GameTrollState extends TrollState implements Runnable {
+public class GameTrollState extends TrollState {
 
     Button saveButton, loadButton, replayButton, settingsButton; //buttons
     Boolean helpToggle = false; //is help on display?
 
     Label trollStatusLabel, playerStatusLabel, trollHPLabel, playerHPLabel, trollBaseAttack, playerBaseAttack, playerBaseDefense, playerLivesLabel, commandLabel;
-
     String trollSpeak = "You, puny human, dare to come on this path?\n" +
                         "These chambers are only meant for the strong– and no human is strong.\n" +
                         "These chambers are only meant for the strong– and no human is strong.\n" +
@@ -48,7 +54,7 @@ public class GameTrollState extends TrollState implements Runnable {
                              "[If you happen to select the random integer– your spell will gain immense power!!!]\n" +
                              "[Defensive spells will perfectly shield you, and attacking spells wilL greatly damage your opponent!]\n" +
                              "[If you want to do an Attack and guess 50 as a number between 0-100, enter A 50 in the textbox]\n" +
-                             "[If you want to defend instead, with a guess of 50, enter D 50 in the textbox.]";
+                             "[If you want to defend instead, with a guess of 50, enter D 50 in the textbox.]\n";
 
     Label roomDescLabel = new Label(); //to hold room description and/or instructions
     VBox objectsInRoom = new VBox(); //to hold room items
@@ -57,19 +63,18 @@ public class GameTrollState extends TrollState implements Runnable {
     TextField inputTextField; //for user input
 
     Label mainText = new Label();
-    ScrollPane mainScroll = new ScrollPane(mainText);
 
     boolean gameStart = false;
 
     int turnCounter = 1;
-    int trollHP = 1500;
-    int playerHP = 900;
-    int trollAttack = 200;
-    int trollDefense = 200;
+    int trollHP = 750 + (int) (250 * Math.random()) + 1;
 
-    ArrayList<String> commandList = new ArrayList<>();
+    final int playerStartHP = 900;
+    int playerHP = playerStartHP;
+    int trollAttack = 50 + (int) (100 * Math.random()) + 1;
 
-    Thread commandThread = new Thread(this);
+    String[] commandList = new String[2];
+
 
     public GameTrollState(String name, AdventureGameView view, Player player)
     {
@@ -104,8 +109,8 @@ public class GameTrollState extends TrollState implements Runnable {
         row1.setVgrow( Priority.SOMETIMES );
         row3.setVgrow( Priority.SOMETIMES );
 
-        grid.getColumnConstraints().addAll( column1 , column2 , column1 );
-        grid.getRowConstraints().addAll( row1 , row2 , row1 );
+        grid.getColumnConstraints().addAll( column1 , column2 , column3 );
+        grid.getRowConstraints().addAll( row1 , row2 , row3 );
 
         // Top Buttons
         saveButton = new Button("Save");
@@ -140,18 +145,6 @@ public class GameTrollState extends TrollState implements Runnable {
         topButtons.getChildren().addAll(saveButton, loadButton, replayButton, settingsButton);
         topButtons.setSpacing(10);
         topButtons.setAlignment(Pos.CENTER);
-
-        //Scroll Pane for main Text
-        mainText.setStyle("-fx-text-fill: white;");
-        mainText.setFont(new Font("Arial", textSize));
-        mainText.setAlignment(Pos.TOP_CENTER);
-        mainText.setPrefWidth(700);
-        mainText.setPrefHeight(700);
-        mainText.setTextOverrun(OverrunStyle.CLIP);
-        mainText.setWrapText(true);
-
-        mainScroll.setStyle("-fx-background: rgb(0,0,0)");
-        grid.add(mainScroll, 1, 1, 1, 1);
 
         //labels for room items
         trollStatusLabel =  new Label("Troll Status");
@@ -242,7 +235,7 @@ public class GameTrollState extends TrollState implements Runnable {
         textEntry.setAlignment(Pos.CENTER);
         grid.add( textEntry, 0, 2, 3, 1 );
 
-        updateScene(trollSpeak + instructionText + "Are you ready? (Press 'B' to Battle the Troll)\n"); //method displays an image and whatever text is supplied
+        updateScene(""); //method displays an image and whatever text is supplied
     }
 
     /**
@@ -278,26 +271,47 @@ public class GameTrollState extends TrollState implements Runnable {
 
     }
 
+    /**
+     * submitEvent
+     * __________________________
+     * Process the command represented by inputText
+     *
+     * @param inputText the command that needs to be processed
+     */
     public void submitEvent(String inputText)
     {
         if(inputText.equals("B") && !gameStart)
         {
             gameStart = true;
-            playGame();
+            updateScene(instructionText + "\nTurn " + turnCounter + "\n" + "Please enter your move: \n");
         }
         else if(gameStart)
         {
             String[] input = inputText.split(" ");
-            boolean firstIsAorD = input[0].equals("A") || input[1].equals("D");
 
-            if(input.length == 2 && firstIsAorD && isNumeric(input[1]))
+            if(input.length == 2)
             {
-                commandList.add(input[0]);
-                commandList.add(input[1]);
+                boolean firstIsAorD = input[0].equals("A") || input[0].equals("D");
+
+                if(firstIsAorD && isNumeric(input[1]))
+                {
+                    commandList[0] = input[0];
+                    commandList[1] = input[1];
+
+                    runTurn();
+                    playGame();
+                }
             }
         }
     }
 
+    /**
+     * isNumeric
+     * __________________________
+     * Returns wether or not text represents an integer
+     *
+     * @param text the command that needs to be processed
+     */
     private boolean isNumeric(String text)
     {
         if(text == null)
@@ -328,9 +342,21 @@ public class GameTrollState extends TrollState implements Runnable {
         inputTextField.setFont(new Font("Arial", textSize));
         playerHPLabel.setText("Player HP: " + playerHP);
         trollHPLabel.setText("Troll HP: " + trollHP);
+        playerLivesLabel.setText("Player Lives: " + player.getLives());
 
         mainText.setText(s);
+        mainText.setStyle("-fx-text-fill: white;");
         mainText.setFont(new Font("Arial", textSize));
+        mainText.setAlignment(Pos.TOP_LEFT);
+        mainText.setPrefWidth(700);
+        mainText.setPrefHeight(700);
+        mainText.setTextOverrun(OverrunStyle.CLIP);
+        mainText.setWrapText(true);
+
+        ScrollPane toScroll = new ScrollPane(mainText);
+        toScroll.setStyle("-fx-background: rgb(0,0,0)");
+        grid.add(toScroll, 1, 1, 1,1);
+
 
         ColorAdjust bright = new ColorAdjust();
         bright.setBrightness(brightness);
@@ -338,33 +364,145 @@ public class GameTrollState extends TrollState implements Runnable {
         this.view.stage.sizeToScene();
     }
 
+    /**
+     * playGame
+     * __________________________
+     * If the player wins the game, then prints winning message,
+     * and moves player to 'trophy room' to get new item.
+     *
+     * If the player loses the game, decreases the players life by one.
+     * If the player has zero lives now, ends game. If player has lives left,
+     * redirects player back to room from which he entered.
+     */
     @Override
     public boolean playGame() {
-        updateScene(instructionText);
-        commandThread.start();
+        if(trollHP <= 0) {
+            updateScene("YOU HAVE WON!!!!");
+            mainText.setFont(new Font("Arial", 70));
 
+            PassageTable passages = this.player.getCurrentRoom().getMotionTable();
+            Room forward = this.view.model.getRooms().get(1);
 
-        while(trollHP > 0 && playerHP > 0)
-        {
-            commandList = new ArrayList<>();
-            System.out.println(commandList);
-            updateScene(instructionText);
+            for(Passage x : passages.passageTable)
+            {
+                if(x.getDirection().equals("FORWARD"))
+                    forward = this.view.model.getRooms().get(x.getDestinationRoom());
+            }
+
+            PauseTransition pause = new PauseTransition(Duration.seconds(3));
+            Room finalForward = forward;
+
+            pause.setOnFinished(event -> {
+                this.player.setCurrentRoom(finalForward);
+                this.view.changeState("Traversal");
+            });
+            pause.play();
         }
+        else if(playerHP <= 0) {
+            this.player.decreaseLives();
+            updateScene("YOU HAVE LOST!!!!");
+            mainText.setFont(new Font("Arial", 70));
 
-        return false;
-    }
+            PauseTransition pause = new PauseTransition(Duration.seconds(3));
 
-    @Override
-    public void run()
-    {
-        while(commandList.size() < 2)
-        {
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+            if(this.player.getLives() == 0) {
+                updateScene("GAME OVER!!!");
+                mainText.setFont(new Font("Arial", 70));
+
+                pause.setOnFinished(event -> {
+                    Platform.exit();
+                });
+                pause.play();
+            }
+            else {
+                PassageTable passages = this.player.getCurrentRoom().getMotionTable();
+                Room back = this.view.model.getRooms().get(1);
+
+                for(Passage x : passages.passageTable)
+                {
+                    if(x.getDirection().equals("BACK"))
+                        back = this.view.model.getRooms().get(x.getDestinationRoom());
+                }
+
+                Room finalBack = back;
+
+                pause.setOnFinished(event -> {
+                    this.player.setCurrentRoom(finalBack);
+                    this.view.changeState("Traversal");
+                });
+                pause.play();
             }
         }
+
+        if(trollHP <= 0 || playerHP <= 0)
+        {
+            gameStart = false;
+            turnCounter = 1;
+            trollHP = 750 + (int) (250 * Math.random()) + 1;
+            playerHP = playerStartHP;
+            trollAttack = 50 + (int) (100 * Math.random()) + 1;
+        }
+
+        return true;
+    }
+
+    /**
+     * runTurn()
+     * __________________________
+     * Represents a turn of the game.
+     */
+    public void runTurn() {
+        String newText = instructionText + "\nTurn " + turnCounter + "\n";
+
+        String attackChoice = commandList[0];
+        int guess = Integer.parseInt(commandList[1]);
+
+        int tAttk = (trollAttack - 50) + (int) (100 * Math.random()) + 1; //Troll Attack
+        int randNumber = (int) (100 * Math.random()) + 1;
+        int difference = Math.abs(randNumber - guess);
+
+        if(guess < 0 && guess > 100)
+            newText += "As you guessed an out of range number, your spell failed!\n";
+        else if(attackChoice.equals("A"))
+        {
+            int pAttk = 0;
+            if(difference == 0) {
+                pAttk = (int) (this.player.getAttackPower() * 3);
+                newText += "Incredible! Your guess matched the random number!\n";
+                newText += "Your spell gains incredible power!\n";
+                newText += "Your spell does " + pAttk + " damage!\n";
+            }
+            else {
+                pAttk = (int) (this.player.getAttackPower() * 2 * ((100 - difference) / 100.0));
+                newText += "The random number was " + randNumber + "\n";
+                newText += "Your spell does " + pAttk + " damage!\n\n";
+            }
+
+            trollHP -= pAttk;
+            playerHP -= tAttk;
+            newText += "The troll's attack does + " + tAttk + " damage!\n\n";
+        }
+        else if(attackChoice.equals("D")) {
+            int newTAttk = 0;
+            if(difference == 0) {
+                newText += "Incredible! Your guess matched the random number!\n";
+                newText += "Your spell gains incredible power!\n";
+                newText += "You have nullified the troll's attack\n";
+            }
+            else {
+                double damageNullified = (double) (this.player.getDefensePower()) / (difference + this.player.getDefensePower());
+                newTAttk = (int) (tAttk * damageNullified);
+                newText += "The random number was " + randNumber + "\n";
+                newText += "Your spell reduced troll attack  damage from " + tAttk + " to " + newTAttk + " points!\n\n";
+            }
+
+            playerHP -= newTAttk;
+            newText += "The troll's attack does " + newTAttk + " damage!\n\n";
+        }
+
+        newText += "Enter your next move: ";
+        updateScene(newText);
+        turnCounter += 1;
     }
 
     /**
@@ -389,6 +527,10 @@ public class GameTrollState extends TrollState implements Runnable {
         });
     }
 
+    /**
+     * This method handles the event related to the
+     * replay button.
+     */
     public void addReplayEvent() {
         replayButton.setOnAction(e -> {
             grid.requestFocus();
@@ -396,6 +538,10 @@ public class GameTrollState extends TrollState implements Runnable {
         });
     }
 
+    /**
+     * This method handles the event related to the
+     * settings button.
+     */
     public void addSettingsEvent() {
         settingsButton.setOnAction(e -> {
             grid.requestFocus();

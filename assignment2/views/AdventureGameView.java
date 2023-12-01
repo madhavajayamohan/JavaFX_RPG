@@ -60,6 +60,25 @@ public class AdventureGameView {
     private MediaPlayer mediaPlayer; //to play audio
     private boolean mediaPlaying; //to know if the audio is playing
 
+    String trollSpeak = "You, puny human, dare to come on this path?\n" +
+            "These chambers are only meant for the strong– and no human is strong.\n" +
+            "These chambers are only meant for the strong– and no human is strong.\n" +
+            "Oho? I see that you can use some magic. Very well, then.\n" +
+            "Let us see how your magic matches up to my strength.\n\n" +
+            "LET US DO BATTLE!!!!\n\n" +
+            "===================\n" +
+            "QUEST: DEFEAT TROLL\n" +
+            "===================\n";
+
+    String instructionText = "[You have two choices: select A, for Attack, or D, for Defense.]\n" +
+            "[Then, to activate your magic, guess an integer from 0 to 100]\n" +
+            "[The system will generate a random integer–\n" +
+            "the closer to that number, the more effective your attack or defense]\n" +
+            "[If you happen to select the random integer– your spell will gain immense power!!!]\n" +
+            "[Defensive spells will perfectly shield you, and attacking spells wilL greatly damage your opponent!]\n" +
+            "[If you want to do an Attack and guess 50 as a number between 0-100, enter A 50 in the textbox]\n" +
+            "[If you want to defend instead, with a guess of 50, enter D 50 in the textbox.]";
+
     /**
      * Adventure Game View Constructor
      * __________________________
@@ -181,7 +200,9 @@ public class AdventureGameView {
 
         currState = allStates[index];
         currGrid = currState.grid;
-        updateScene("");
+
+        if(index == 3)
+            updateScene(trollSpeak + instructionText + "\nAre you ready to play? (Enter B to start playing)");
         updateItems();
         this.stage.setScene(allScenes[index]);
         this.stage.setResizable(false);
