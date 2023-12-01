@@ -437,6 +437,14 @@ public class TraversalState extends GridStateWithItems
             currButton.setOnAction(e -> {
                 submitEvent("take " + x.getName());
             });
+            currButton.hoverProperty().addListener((e, notHovered, hovered) -> {
+                if (hovered) {
+                    currButton.setText(x.getDescription());
+                } else {
+                    currButton.setText(x.getName());
+                }
+                currButton.setWrapText(true);
+            });
             objectsInRoom.getChildren().add(currButton);
         }
 
