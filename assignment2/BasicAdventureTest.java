@@ -1,4 +1,3 @@
-
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -22,7 +21,7 @@ public class BasicAdventureTest {
         String objects = game.player.getCurrentRoom().getObjectString();
         assertEquals("a water bird", objects);
     }
-
+    @Test
     void properObjectDescTest() throws IOException {
         AdventureGame game = new AdventureGame("TinyGame");
         HashMap<Integer, Room> rooms = game.getRooms();
