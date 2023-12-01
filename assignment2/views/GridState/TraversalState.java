@@ -448,8 +448,6 @@ public class TraversalState extends GridStateWithItems
                 }
                 currButton.setWrapText(true);
             });
-            String name = x.getName();
-            currButton.setUserData(name);
             objectsInRoom.getChildren().add(currButton);
         }
 
