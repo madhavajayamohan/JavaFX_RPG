@@ -533,11 +533,15 @@ public class TraversalState extends GridStateWithItems
             this.view.changeState("Inventory");
         });
     }
-
+    /**
+     * This method handles the event relayed to the replay audio button.
+     * If audio is already playing, stop it first then proceed to play the current room description audio.
+    * */
     public void addReplayEvent() {
         replayButton.setOnAction(e -> {
             grid.requestFocus();
-            // Needs to be implemented
+            this.view.stopArticulation();
+            this.view.articulateRoomDescription();
         });
     }
 
