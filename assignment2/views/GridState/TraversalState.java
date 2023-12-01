@@ -537,7 +537,8 @@ public class TraversalState extends GridStateWithItems
     public void addReplayEvent() {
         replayButton.setOnAction(e -> {
             grid.requestFocus();
-            // Needs to be implemented
+            this.view.stopArticulation();
+            this.view.articulateRoomDescription();
         });
     }
 
