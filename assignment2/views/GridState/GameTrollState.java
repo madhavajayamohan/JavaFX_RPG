@@ -441,6 +441,7 @@ public class GameTrollState extends TrollState {
             trollHP = 750 + (int) (250 * Math.random()) + 1;
             playerHP = playerStartHP;
             trollAttack = 50 + (int) (100 * Math.random()) + 1;
+            this.view.inTrollGame = false;
         }
 
         return true;
