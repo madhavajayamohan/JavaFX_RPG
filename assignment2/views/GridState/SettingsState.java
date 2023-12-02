@@ -62,7 +62,7 @@ public class SettingsState extends GridState {
         grid.getRowConstraints().addAll(row1, row2, row3);
 
         //Widgets
-        Label settingsLabel = new Label("Settings");
+        settingsLabel = new Label("Settings");
         settingsLabel.setFont(new Font("Arial", textSize));
         settingsLabel.setAlignment(Pos.CENTER);
         settingsLabel.setStyle("-fx-text-fill: white;");

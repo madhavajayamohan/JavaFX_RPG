@@ -45,7 +45,7 @@ public class AdventureGameView {
 
     public boolean inTrollGame = false;
 
-    private MediaPlayer mediaPlayer; //to play audio
+    private MediaPlayer mediaPlayer1; //to play audio
     private boolean mediaPlaying; //to know if the audio is playing
     private BackgroundMusic backgroundMusic;
 
@@ -146,12 +146,15 @@ public class AdventureGameView {
         else roomDescriptionFile = "./" + adventureName + "/sounds/" + roomName.toLowerCase() + "-short.mp3" ;
         roomDescriptionFile = roomDescriptionFile.replace(" ","-");
 
-        Media sound = new Media(new File(roomDescriptionFile).toURI().toString());
+        if(!roomName.equals("TROLL")) {
+            System.out.println(roomName);
+            Media sound = new Media(new File(roomDescriptionFile).toURI().toString());
 
-        mediaPlayer1 = new MediaPlayer(sound);
-        mediaPlayer1.play();
-        mediaPlaying = true;
-        backgroundMusic.adjustVolume(0.1);
+            mediaPlayer1 = new MediaPlayer(sound);
+            mediaPlayer1.play();
+            mediaPlaying = true;
+            backgroundMusic.adjustVolume(0.1);
+        }
 
     }
     /**
@@ -207,6 +210,9 @@ public class AdventureGameView {
 
         if(index == 3)
             updateScene(trollSpeak + instructionText + "\nAre you ready to play? (Enter B to start playing)");
+        else
+            updateScene("");
+
         updateItems();
         this.stage.setScene(allScenes[index]);
         this.stage.setResizable(false);

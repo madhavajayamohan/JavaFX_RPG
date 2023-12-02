@@ -5,17 +5,24 @@ building.  A small stream flows out of the building and
 down a gully to the south.  A road runs up a small hill
 to the west.
 -----
+qwertyuio
+false
+-----
 WEST       2
 UP         2
 NORTH      3
 IN         3
 SOUTH      4
 DOWN       4
+TEST       38
 
 2
 End of road
 You are at the end of a road at the top of a small hill.
 You can see a small building in the valley to the east.
+-----
+qwertyuio
+false
 -----
 EAST       1
 WEST       3
@@ -27,6 +34,9 @@ Inside building
 You are inside a building, a well house for a large spring.
 The exit door is to the south.  There is another room to
 the north, but the door is barred by a shimmering curtain.
+-----
+qwertyuio
+false
 -----
 SOUTH      1
 WEST       4
@@ -43,6 +53,9 @@ Valley beside a stream
 You are in a valley in the forest beside a stream tumbling
 along a rocky bed.  The stream is flowing to the south.
 -----
+qwertyuio
+false
+-----
 NORTH      1
 UP         1
 SOUTH      5
@@ -54,6 +67,9 @@ Slit in rock
 At your feet all the water of the stream splashes into a
 two-inch slit in the rock.  To the south, the streambed is
 bare rock.
+-----
+qwertyuio
+false
 -----
 NORTH      4
 UP         4
@@ -68,6 +84,9 @@ Set into the dirt is a strong steel grate mounted in
 concrete.  A dry streambed leads into the depression from
 the north.
 -----
+qwertyuio
+false
+-----
 NORTH      5
 UP         5
 DOWN       8/KEYS
@@ -78,6 +97,9 @@ WEST       7
 Above locked grate
 The grate is locked and you don't have any keys.
 -----
+qwertyuio
+false
+-----
 FORCED     6
 
 8
@@ -85,6 +107,9 @@ Beneath grate
 You are in a small chamber beneath a 3x3 steel grate to
 the surface.  A low crawl over cobbles leads inward to
 the west.
+-----
+qwertyuio
+false
 -----
 UP         6
 OUT        6
@@ -96,6 +121,9 @@ Cobble crawl
 You are crawling over cobbles in a low east/west passage.
 There is a dim light to the east.
 -----
+qwertyuio
+false
+-----
 EAST       8
 WEST      12/LAMP
 WEST      10
@@ -104,6 +132,9 @@ WEST      10
 Darkness
 It is now pitch dark.  If you proceed you will likely fall
 into a pit.
+-----
+qwertyuio
+false
 -----
 EAST       9
 OUT        9
@@ -119,6 +150,9 @@ DOWN      11
 Pit
 You fell into a pit and broke every bone in your body!
 -----
+qwertyuio
+false
+-----
 FORCED     0
 
 12
@@ -129,6 +163,9 @@ plugged with mud and debris here, but an extremely narrow
 canyon leads upward and west.  Carved on the wall is the
 message: "Magic Word XYZZY".
 -----
+qwertyuio
+false
+-----
 EAST       9
 WEST      13
 UP        13
@@ -137,6 +174,9 @@ XYZZY      3
 13
 Sloping canyon
 You are in an awkward sloping east/west canyon.
+-----
+qwertyuio
+false
 -----
 EAST      12
 DOWN      12
@@ -153,6 +193,9 @@ You are in a splendid chamber thirty feet high.  The walls
 are frozen rivers of orange stone.  A narrow canyon and a
 good passage exit from east and west sides of the chamber.
 -----
+qwertyuio
+false
+-----
 EAST      13
 WEST      15
 NORTH      16
@@ -166,6 +209,9 @@ High in the cavern, you see a little bird flying around
 the rocks.  It takes one look at the black rod and quickly
 flies out of sight.
 -----
+qwertyuio
+false
+-----
 EAST      13
 WEST      16
 
@@ -174,6 +220,9 @@ Top of pit
 At your feet is a small pit breathing traces of white mist.
 An east passage ends here except for a small crack leading
 on.  Rough stone steps lead into the pit.
+-----
+qwertyuio
+false
 -----
 EAST      14/BIRD
 EAST      15/ROD
@@ -185,6 +234,9 @@ DOWN      18
 Narrow crack
 The crack is far too small for you to follow.
 -----
+qwertyuio
+false
+-----
 FORCED    16
 
 18
@@ -194,6 +246,9 @@ sight to the west.  The hall is filled with wisps of white
 mist swaying to and fro almost as if alive.  There are
 passages to the north and south, and a stone stairway
 leads upward.
+-----
+qwertyuio
+false
 -----
 UP        20/NUGGET
 UP        16
@@ -208,6 +263,9 @@ Nugget of gold room
 This is a low room with a crude note on the wall.  The
 note says, "You won't get it up the steps."
 -----
+qwertyuio
+false
+-----
 NORTH     18
 OUT       18
 WEST      20
@@ -217,12 +275,18 @@ Unseen force
 An unseen force blocks your way and a ghostly voice echoes:
 "You won't get it up the steps."
 -----
+qwertyuio
+false
+-----
 FORCED    18
 
 21
 East bank of fissure
 You are on the east bank of a fissure slicing clear across
 the hall.  The mist is quite thick here.
+-----
+qwertyuio
+false
 -----
 EAST      18
 WAVE      24/ROD
@@ -234,11 +298,17 @@ JUMP      29
 Blocked by fissure
 The fissure looks too wide to cross.
 -----
+qwertyuio
+false
+-----
 FORCED    21
 
 23
 Wave Rod
 You don't have the appropriate thing to wave.
+-----
+qwertyuio
+false
 -----
 FORCED    21
 
@@ -249,12 +319,18 @@ from its tip which gain shape and substance over the chasm.
 In moments, a shimmering crystal bridge spans the fissure.
 After you cross, the bridge fades into nothingness.
 -----
+qwertyuio
+false
+-----
 FORCED    25
 
 25
 West bank of fissure
 You are on the west side of the fissure in the Hall of
 Mists.
+-----
+qwertyuio
+false
 -----
 IN      30
 WAVE      28/ROD
@@ -267,11 +343,17 @@ WEST      26
 Blocked by fissure
 The fissure looks too wide to cross.
 -----
+qwertyuio
+false
+-----
 FORCED    25
 
 27
 Wave Rod
 You don't have the appropriate thing to wave.
+-----
+qwertyuio
+false
 -----
 FORCED    25
 
@@ -282,17 +364,26 @@ from its tip which gain shape and substance over the chasm.
 In moments, a shimmering crystal bridge spans the fissure.
 After you cross, the bridge fades into nothingness.
 -----
+qwertyuio
+false
+-----
 FORCED    21
 
 29
 Fatal jump
 You make a mighty leap but fall several feet short of the far side.  You make a few mad scrambles at the air as you fall to your death on the rocks below.
 -----
+qwertyuio
+false
+-----
 FORCED     0
 
 30
 Curtain1
 You are passing through a curtain!
+-----
+qwertyuio
+false
 -----
 FORCED    31/NUGGET
 FORCED    36
@@ -301,12 +392,18 @@ FORCED    36
 Curtain2
 You are passing through another curtain!
 -----
+qwertyuio
+false
+-----
 FORCED    32/DIAMOND
 FORCED    36
 
 32
 Curtain3
 Yet another curtain here!
+-----
+qwertyuio
+false
 -----
 FORCED    33/EMERALD
 FORCED    36
@@ -315,12 +412,18 @@ FORCED    36
 Curtain4
 So many curtains!
 -----
+qwertyuio
+false
+-----
 FORCED    34/EGGS
 FORCED    36
 
 34
 Curtain5
 How many more curtains could there be?
+-----
+qwertyuio
+false
 -----
 FORCED    35/CHEST
 FORCED    36
@@ -329,6 +432,9 @@ FORCED    36
 Curtain6
 What, still more curtains?
 -----
+qwertyuio
+false
+-----
 FORCED    37/COINS
 FORCED    36
 
@@ -336,10 +442,26 @@ FORCED    36
 Missing Treasures
 You can pass through this curtain only if you're carrying all the treasures.  You don't yet have all six.
 -----
+qwertyuio
+false
+-----
 FORCED     3
 
 37
 Victory
 You have collected all the treasures and are admitted to the Adventurer's Hall of Fame.  Congratulations!
 -----
+qwertyuio
+false
+-----
 FORCED     0
+
+38
+Troll
+
+-----
+qwertyuio
+false
+-----
+FORWARD     2
+BACK        1

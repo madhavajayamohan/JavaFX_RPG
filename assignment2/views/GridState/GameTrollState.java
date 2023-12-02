@@ -280,7 +280,7 @@ public class GameTrollState extends TrollState {
      */
     public void submitEvent(String inputText)
     {
-        if(inputText.equals("B") && !gameStart)
+        if(inputText.equalsIgnoreCase("B") && !gameStart)
         {
             gameStart = true;
             updateScene(instructionText + "\nTurn " + turnCounter + "\n" + "Please enter your move: \n");
@@ -291,7 +291,7 @@ public class GameTrollState extends TrollState {
 
             if(input.length == 2)
             {
-                boolean firstIsAorD = input[0].equals("A") || input[0].equals("D");
+                boolean firstIsAorD = input[0].equalsIgnoreCase("A") || input[0].equalsIgnoreCase("D");
 
                 if(firstIsAorD && isNumeric(input[1]))
                 {
@@ -380,20 +380,10 @@ public class GameTrollState extends TrollState {
             updateScene("YOU HAVE WON!!!!");
             mainText.setFont(new Font("Arial", 70));
 
-            PassageTable passages = this.player.getCurrentRoom().getMotionTable();
-            Room forward = this.view.model.getRooms().get(1);
-
-            for(Passage x : passages.passageTable)
-            {
-                if(x.getDirection().equals("FORWARD"))
-                    forward = this.view.model.getRooms().get(x.getDestinationRoom());
-            }
-
             PauseTransition pause = new PauseTransition(Duration.seconds(3));
-            Room finalForward = forward;
 
             pause.setOnFinished(event -> {
-                this.player.setCurrentRoom(finalForward);
+                this.view.model.movePlayer("FORWARD");
                 this.view.changeState("Traversal");
             });
             pause.play();
@@ -416,18 +406,9 @@ public class GameTrollState extends TrollState {
             }
             else {
                 PassageTable passages = this.player.getCurrentRoom().getMotionTable();
-                Room back = this.view.model.getRooms().get(1);
-
-                for(Passage x : passages.passageTable)
-                {
-                    if(x.getDirection().equals("BACK"))
-                        back = this.view.model.getRooms().get(x.getDestinationRoom());
-                }
-
-                Room finalBack = back;
 
                 pause.setOnFinished(event -> {
-                    this.player.setCurrentRoom(finalBack);
+                    this.view.model.movePlayer("BACK");
                     this.view.changeState("Traversal");
                 });
                 pause.play();
