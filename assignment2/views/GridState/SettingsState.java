@@ -1,5 +1,6 @@
 package views.GridState;
 
+import AdventureModel.AdventureGame;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -24,7 +25,7 @@ public class SettingsState extends GridState {
 
     public Button enlargeButton, minimizeButton, highContrastButton, exitButton;
     //Button to enlarge text, minimize text, change into high contrast most, and go back to Traversal Screen
-    public Label brightnessLabel, backgroundLabel, textLabel, contrastLabel;
+    public Label settingsLabel, brightnessLabel, backgroundLabel, textLabel, contrastLabel;
     public boolean highContrastModeOn = false;
 
     public SettingsState(String name, AdventureGameView view) {
@@ -66,6 +67,7 @@ public class SettingsState extends GridState {
         settingsLabel.setAlignment(Pos.CENTER);
         settingsLabel.setStyle("-fx-text-fill: white;");
         settingsLabel.setFont(new Font("Arial", 30));
+        settingsLabel.setWrapText(true);
 
         exitButton = new Button("Exit");
         exitButton.setId("Exit");
@@ -79,6 +81,7 @@ public class SettingsState extends GridState {
         brightnessLabel.setAlignment(Pos.CENTER);
         brightnessLabel.setStyle("-fx-text-fill: white;");
         brightnessLabel.setFont(new Font("Arial", 20));
+        brightnessLabel.setWrapText(true);
 
         brightnessControl = new Slider(-1, 1, 0);
         brightnessControl.setMax(0.5);
@@ -95,6 +98,7 @@ public class SettingsState extends GridState {
         backgroundLabel.setAlignment(Pos.CENTER);
         backgroundLabel.setStyle("-fx-text-fill: white;");
         backgroundLabel.setFont(new Font("Arial", 20));
+        backgroundLabel.setWrapText(true);
 
         backgroundThemeChanger = new ComboBox();
         addBackgroundThemeEvent();
@@ -109,6 +113,7 @@ public class SettingsState extends GridState {
         textLabel.setAlignment(Pos.CENTER);
         textLabel.setStyle("-fx-text-fill: white;");
         textLabel.setFont(new Font("Arial", 20));
+        textLabel.setWrapText(true);
 
         enlargeButton = new Button("Enlarge");
         enlargeButton.setId("Enlarge");
@@ -139,6 +144,7 @@ public class SettingsState extends GridState {
         contrastLabel.setAlignment(Pos.CENTER);
         contrastLabel.setStyle("-fx-text-fill: white;");
         contrastLabel.setFont(new Font("Arial", 20));
+        contrastLabel.setWrapText(true);
 
         highContrastButton = new Button("Change Contrast");
         highContrastButton.setId("Contrast");
@@ -167,9 +173,7 @@ public class SettingsState extends GridState {
 
     @Override
     public void updateScene(String s) {
-        exitButton.setFont(new Font("Arial", textSize));
-        enlargeButton.setFont(new Font("Arial", textSize));
-        minimizeButton.setFont(new Font("Arial", textSize));
+        settingsLabel.setFont(new Font("Arial", textSize));
         brightnessLabel.setFont(new Font("Arial", textSize));
         backgroundLabel.setFont(new Font("Arial", textSize));
         contrastLabel.setFont(new Font("Arial", textSize));
@@ -226,10 +230,11 @@ public class SettingsState extends GridState {
     }
 
     /**
-     * Adds a slider event to brightnessControl
+     * Adds a slider event to brightnessControl.
+     * Min value is -0.5 and max value is 0.5
      */
-    public void addSliderEvent() {
-        //To be implemented
+    public void addSliderEvent()
+    {
         brightnessControl.setOnMouseDragged(e -> {
             brightness = brightnessControl.getValue();
             updateScene("");

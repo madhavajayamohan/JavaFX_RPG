@@ -46,9 +46,11 @@ public class TraversalState extends GridStateWithItems
     VBox objectsInInventory = new VBox(); //to hold inventory items
     ImageView roomImageView; //to hold room image
     TextField inputTextField; //for user input
-
     VBox textEntry = new VBox();
-
+    /**
+     * Boolean toggle for hint display
+     */
+    Boolean hintToggle = false;
 
     public TraversalState(String name, AdventureGameView view)
     {
@@ -151,6 +153,7 @@ public class TraversalState extends GridStateWithItems
         objLabel.setStyle("-fx-text-fill: white;");
         objLabel.setFont(new Font("Arial", textSize));
         objLabel.setTextFill(Color.BLACK);
+        objLabel.setWrapText(true);
 
         //add all the widgets to the GridPane
         grid.add( objLabel, 0, 0, 1, 1 );  // Add label
@@ -160,6 +163,7 @@ public class TraversalState extends GridStateWithItems
         commandLabel = new Label("What would you like to do?");
         commandLabel.setStyle("-fx-text-fill: white;");
         commandLabel.setFont(new Font("Arial", textSize));
+        commandLabel.setWrapText(true);
 
         inputTextField = new TextField();
         inputTextField.setFont(new Font("Arial", textSize));
@@ -250,6 +254,9 @@ public class TraversalState extends GridStateWithItems
         } else if (text.equalsIgnoreCase("HELP") || text.equalsIgnoreCase("H")) {
             showInstructions();
             return;
+        } else if (text.equalsIgnoreCase("HINT")) {
+            showHint();
+            return;
         } else if (text.equalsIgnoreCase("COMMANDS") || text.equalsIgnoreCase("C")) {
             showCommands(); //this is new!  We did not have this command in A1
             return;
@@ -258,7 +265,7 @@ public class TraversalState extends GridStateWithItems
         //try to move!
         String output = this.view.model.interpretAction(text); //process the command!
 
-        if (output == null || (!output.equals("GAME OVER") && !output.equals("FORCED") && !output.equals("HELP"))) {
+        if (output == null || (!output.equals("GAME OVER") && !output.equals("FORCED") && !output.equals("HELP"))  && !output.equals("QUIT")) {
             updateScene(output);
             updateItems();
             for (Node x : grid.getChildren()) {
@@ -281,6 +288,10 @@ public class TraversalState extends GridStateWithItems
                 Platform.exit();
             });
             pause.play();
+        } else if (output.equals("QUIT")) {
+            updateScene("Quitting the game");
+            updateItems();
+            Platform.exit();
         } else if (output.equals("FORCED")) {
             //write code here to handle "FORCED" events!
             //Your code will need to display the image in the
@@ -346,7 +357,10 @@ public class TraversalState extends GridStateWithItems
         roomDescLabel.setPrefHeight(500);
         roomDescLabel.setTextOverrun(OverrunStyle.CLIP);
         roomDescLabel.setWrapText(true);
-        VBox roomPane = new VBox(roomImageView,roomDescLabel);
+        ScrollPane toScroll = new ScrollPane(roomDescLabel);
+        toScroll.setStyle("-fx-background: rgb(0,0,0)");
+
+        VBox roomPane = new VBox(roomImageView,toScroll);
         roomPane.setPadding(new Insets(10));
         roomPane.setAlignment(Pos.TOP_CENTER);
 
@@ -406,13 +420,6 @@ public class TraversalState extends GridStateWithItems
         objLabel.setFont(new Font("Arial", textSize));
         commandLabel.setFont(new Font("Arial", textSize));
 
-        saveButton.setFont(new Font("Arial", textSize));
-        loadButton.setFont(new Font("Arial", textSize));
-        helpButton.setFont(new Font("Arial", textSize));
-        inventButton.setFont(new Font("Arial", textSize));
-        replayButton.setFont(new Font("Arial", textSize));
-        settingsButton.setFont(new Font("Arial", textSize));
-
         grid.add(roomPane, 1, 1);
         ColorAdjust bright = new ColorAdjust();
         bright.setBrightness(brightness);
@@ -439,7 +446,7 @@ public class TraversalState extends GridStateWithItems
         } else roomDescLabel.setText(textToDisplay);
         roomDescLabel.setStyle("-fx-text-fill: white;");
         roomDescLabel.setFont(new Font("Arial", textSize));
-        roomDescLabel.setAlignment(Pos.CENTER);
+        roomDescLabel.setAlignment(Pos.TOP_CENTER);
     }
 
     /**
@@ -454,7 +461,7 @@ public class TraversalState extends GridStateWithItems
         int roomNumber = this.view.model.getPlayer().getCurrentRoom().getRoomNumber();
         String roomImage = this.view.model.getDirectoryName() + "/room-images/" + roomNumber + ".png";
 
-        Image roomImageFile = new Image(roomImage);
+        Image roomImageFile = new Image(new File(roomImage).toURI().toString());
         roomImageView = new ImageView(roomImageFile);
         roomImageView.setPreserveRatio(true);
         roomImageView.setFitWidth(400);
@@ -484,7 +491,7 @@ public class TraversalState extends GridStateWithItems
         //write some code here to add images of objects in a given room to the objectsInRoom Vbox
         ArrayList<AdventureObject> roomObj = this.view.model.player.getCurrentRoom().objectsInRoom;
         for (AdventureObject x : roomObj) {
-            Image currImg = new Image(this.view.model.getDirectoryName() + "/objectImages/" + x.getName() + ".jpg");
+            Image currImg = new Image(new File(this.view.model.getDirectoryName() + "/objectImages/" + x.getName() + ".jpg").toURI().toString());
             ImageView currImgView = new ImageView(currImg);
             currImgView.setFitWidth(100);
             currImgView.setPreserveRatio(true);
@@ -494,6 +501,14 @@ public class TraversalState extends GridStateWithItems
             makeButtonAccessible(currButton, x.getName() + " Object Button", "This button represents the " + x.getName() + " object.", "This button represents the object " + x.getName() +". Click it to pick up the object.");
             currButton.setOnAction(e -> {
                 submitEvent("take " + x.getName());
+            });
+            currButton.hoverProperty().addListener((e, notHovered, hovered) -> {
+                if (hovered) {
+                    currButton.setText(x.getDescription());
+                } else {
+                    currButton.setText(x.getName());
+                }
+                currButton.setWrapText(true);
             });
             objectsInRoom.getChildren().add(currButton);
         }
@@ -570,6 +585,22 @@ public class TraversalState extends GridStateWithItems
     }
 
     /**
+     * Shows the hint for the given room
+     */
+    public void showHint() {
+
+        if (hintToggle) {
+            updateScene("");
+            view.stopArticulation();
+            hintToggle = false;
+        } else {
+            updateScene(this.view.model.player.getCurrentRoom().getHint());
+            view.stopArticulation();
+            hintToggle = true;
+        }
+    }
+
+    /**
      * This method handles the event related to the
      * help button.
      */
@@ -608,11 +639,15 @@ public class TraversalState extends GridStateWithItems
             this.view.changeState("Inventory");
         });
     }
-
+    /**
+     * This method handles the event relayed to the replay audio button.
+     * If audio is already playing, stop it first then proceed to play the current room description audio.
+    * */
     public void addReplayEvent() {
         replayButton.setOnAction(e -> {
             grid.requestFocus();
-            // Needs to be implemented
+            this.view.stopArticulation();
+            this.view.articulateRoomDescription();
         });
     }
 
