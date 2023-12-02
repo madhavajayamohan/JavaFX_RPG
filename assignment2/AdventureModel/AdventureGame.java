@@ -4,6 +4,7 @@ import AdventureModel.Players.DefaultPlayer;
 import AdventureModel.Players.Player;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -168,7 +169,23 @@ public class AdventureGame implements Serializable {
             }
             return null;
         } else if(Arrays.asList(this.actionVerbs).contains(inputArray[0])) {
-            if(inputArray[0].equals("QUIT")) { return "GAME OVER"; } //time to stop!
+            if(inputArray[0].equals("QUIT")) {
+                String gameName = "Autosave " + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + ".ser";
+                String separator = File.separator;
+                File save = new File("Games" + separator + "AutoSaves" + separator + gameName);
+                saveModel(save);
+
+
+                File[] autoSaves = new File("Games" + separator + "AutoSaves").listFiles();
+                if (autoSaves != null) {
+                    Arrays.sort(autoSaves);
+                    if (autoSaves.length > 10) {
+                        File temp = new File("Games" + separator + "AutoSaves" + separator + autoSaves[0].getName());
+                        System.out.println(temp.delete());
+                    }
+                }
+                return "QUIT";
+            } //time to stop!
             else if(inputArray[0].equals("INVENTORY") && this.player.getInventory().size() == 0) return "INVENTORY IS EMPTY";
             else if(inputArray[0].equals("INVENTORY") && this.player.getInventory().size() > 0) return "THESE OBJECTS ARE IN YOUR INVENTORY:\n" + this.player.getInventory().toString();
             else if(inputArray[0].equals("TAKE") && inputArray.length < 2) return "THE TAKE COMMAND REQUIRES AN OBJECT";

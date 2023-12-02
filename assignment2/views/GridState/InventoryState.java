@@ -82,21 +82,25 @@ public class InventoryState extends GridStateWithItems
         inventoryLabel.setAlignment(Pos.CENTER);
         inventoryLabel.setStyle("-fx-text-fill: white;");
         inventoryLabel.setFont(new Font("Arial", 30));
+        inventoryLabel.setWrapText(true);
 
         objLabel =  new Label("Objects in Inventory");
         objLabel.setAlignment(Pos.CENTER);
         objLabel.setStyle("-fx-text-fill: white;");
         objLabel.setFont(new Font("Arial", textSize));
+        objLabel.setWrapText(true);
 
         powerUpLabel =  new Label("Power Ups");
         powerUpLabel.setAlignment(Pos.CENTER);
         powerUpLabel.setStyle("-fx-text-fill: white;");
         powerUpLabel.setFont(new Font("Arial", textSize));
+        powerUpLabel.setWrapText(true);
 
         achivementLabel =  new Label("Achievements");
         achivementLabel.setAlignment(Pos.CENTER);
         achivementLabel.setStyle("-fx-text-fill: white;");
         achivementLabel.setFont(new Font("Arial", textSize));
+        achivementLabel.setWrapText(true);
 
         //add all the widgets to the GridPane
         grid.add(inventoryLabel, 0, 0, 1, 1 );  // Add label
@@ -115,10 +119,10 @@ public class InventoryState extends GridStateWithItems
         updatePowerUps();
         updateAchievements();
 
+        inventoryLabel.setFont(new Font("Arial", textSize));
         objLabel.setFont(new Font("Arial", textSize));
         powerUpLabel.setFont(new Font("Arial", textSize));
         achivementLabel.setFont(new Font("Arial", textSize));
-        exitButton.setFont(new Font("Arial", textSize));
     }
 
     @Override
