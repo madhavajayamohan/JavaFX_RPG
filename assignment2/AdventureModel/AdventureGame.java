@@ -1,5 +1,7 @@
 package AdventureModel;
 
+import AdventureModel.Players.Decorators.BuffDecorator;
+import AdventureModel.Players.Decorators.DefenseUpDecorator;
 import AdventureModel.Players.DefaultPlayer;
 import AdventureModel.Players.Player;
 
@@ -161,8 +163,16 @@ public class AdventureGame implements Serializable {
             else if(inputArray[0].equals("DROP") && inputArray.length < 2) return "THE DROP COMMAND REQUIRES AN OBJECT";
             else if(inputArray[0].equals("TAKE") && inputArray.length == 2) {
                 if(this.player.getCurrentRoom().checkIfObjectInRoom(inputArray[1])) {
-                    this.player.takeObject(inputArray[1]);
-                    return "YOU HAVE TAKEN:\n " + inputArray[1];
+                    if (!inputArray[1].contains("BUFF")) {
+                        this.player.takeObject(inputArray[1]);
+                        return "YOU HAVE TAKEN:\n " + inputArray[1];
+                    } else if (inputArray[1].equals("EXTRALIFE")){
+                        this.player.increaseLives();
+                        return "YOU HAVE GAINED AN EXTRA LIFE";
+                    } else {
+                        this.player.takePowerUp(inputArray[1]);
+                        return "YOU HAVE TAKEN:\n " + inputArray[1];
+                    }
                 } else {
                     return "THIS OBJECT IS NOT HERE:\n " + inputArray[1];
                 }
@@ -171,7 +181,16 @@ public class AdventureGame implements Serializable {
                 if(this.player.checkIfObjectInInventory(inputArray[1])) {
                     this.player.dropObject(inputArray[1]);
                     return "YOU HAVE DROPPED:\n " + inputArray[1];
-                } else {
+                } else if (this.player.checkIfObjectInPowerInventory(inputArray[1])){       //Add use = drop in synonyms.txt
+                    this.player.dropPowerUp(inputArray[1]);
+                    if (inputArray[1].contains("IMMUNITY")) {
+                        this.player.setImmunity(true);
+                    } else if (inputArray[1].contains("ATTACK")) {
+                        this.player = new BuffDecorator(this.player);
+                    } else if (inputArray[1].contains("DEFENSE")) {
+                        this.player = new DefenseUpDecorator(this.player);
+                    }
+                }else {
                     return "THIS OBJECT IS NOT IN YOUR INVENTORY:\n " + inputArray[1];
                 }
             }
