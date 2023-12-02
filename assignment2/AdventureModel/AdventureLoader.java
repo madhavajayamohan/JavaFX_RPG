@@ -62,10 +62,18 @@ public class AdventureLoader {
             }
             roomDescription += "\n";
 
+            String hints = "";
+            line = buff.readLine();
+            while (!(line.equalsIgnoreCase("true") || line.equalsIgnoreCase("false"))) {
+                hints += line + "\n";
+                line = buff.readLine();
+            }
+
             // now we make the room object
-            Room room = new Room(roomName, roomNumber, roomDescription, adventureName);
+            Room room = new Room(roomName, roomNumber, roomDescription, adventureName, hints, line);
 
             // now we make the motion table
+            line = buff.readLine(); // read the line "-----"
             line = buff.readLine(); // reads the line after "-----"
             while (line != null && !line.equals("")) {
                 String[] part = line.split(" \s+"); // have to use regex \\s+ as we don't know how many spaces are between the direction and the room number

@@ -32,6 +32,21 @@ public abstract class Player implements Serializable {
     protected int defPower;
 
     /**
+     * The number of lives of the player.
+     */
+    protected int lives;
+
+    /**
+     * Value for whether the player is immune to debuffs or not
+     */
+    protected boolean immunity;
+
+    /**
+     * The list of power ups that the player is carrying at the moment.
+     */
+    public ArrayList<AdventureObject> powerInv;
+
+    /**
      * This method adds an object into players inventory if the object is present in
      * the room and returns true. If the object is not present in the room, the method
      * returns false.
@@ -50,6 +65,24 @@ public abstract class Player implements Serializable {
         }
     }
 
+    /**
+     * This method adds an object into players power inventory if the object is present in
+     * the room and returns true. If the object is not present in the room, the method
+     * returns false.
+     *
+     * @param object name of the object to pick up
+     * @return true if picked up, false otherwise
+     */
+    public boolean takePowerUp(String object){
+        if(this.currentRoom.checkIfObjectInRoom(object)){
+            AdventureObject object1 = this.currentRoom.getObject(object);
+            this.currentRoom.removeGameObject(object1);
+            this.addToPowerInventory(object1);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     /**
      * checkIfObjectInInventory
@@ -62,6 +95,21 @@ public abstract class Player implements Serializable {
     public boolean checkIfObjectInInventory(String s) {
         for(int i = 0; i<this.inventory.size();i++){
             if(this.inventory.get(i).getName().equals(s)) return true;
+        }
+        return false;
+    }
+
+    /**
+     * checkIfObjectInPowerInventory
+     * __________________________
+     * This method checks to see if an object is in a player's power inventory.
+     *
+     * @param s the name of the object
+     * @return true if object is in power inventory, false otherwise
+     */
+    public boolean checkIfObjectInPowerInventory(String s) {
+        for(int i = 0; i<this.powerInv.size();i++){
+            if(this.powerInv.get(i).getName().equals(s)) return true;
         }
         return false;
     }
@@ -83,6 +131,20 @@ public abstract class Player implements Serializable {
     }
 
     /**
+     * This method drops an object in the players power inventory.
+     * If the object is not in the power inventory, the method does nothing.
+     *
+     * @param s name of the object to drop
+     */
+    public void dropPowerUp(String s) {
+        for(int i = 0; i<this.powerInv.size();i++){
+            if(this.powerInv.get(i).getName().equals(s)) {
+                this.powerInv.remove(i);
+            }
+        }
+    }
+
+    /**
      * Setter method for the current room attribute.
      *
      * @param currentRoom The location of the player in the game.
@@ -98,6 +160,15 @@ public abstract class Player implements Serializable {
      */
     public void addToInventory(AdventureObject object) {
         this.inventory.add(object);
+    }
+
+    /**
+     * This method adds an object to the power inventory of the player.
+     *
+     * @param object Prop or object to be added to the inventory.
+     */
+    public void addToPowerInventory(AdventureObject object) {
+        this.powerInv.add(object);
     }
 
 
@@ -124,6 +195,19 @@ public abstract class Player implements Serializable {
     }
 
     /**
+     * Getter method for string representation of power inventory.
+     *
+     * @return ArrayList of names of power ups that the player has.
+     */
+    public ArrayList<String> getPowerInventory() {
+        ArrayList<String> objects = new ArrayList<>();
+        for(int i=0;i<this.powerInv.size();i++){
+            objects.add(this.powerInv.get(i).getName());
+        }
+        return objects;
+    }
+
+    /**
      * This method returns the correct calculation for atkPower
      *
      * @return integer value for atkPower
@@ -140,4 +224,41 @@ public abstract class Player implements Serializable {
     public int getDefensePower() {
         return defPower;
     }
+
+    /**
+     * This method returns the current player's lives.
+     * @return interger value for lives
+     */
+    public int getLives() { return lives; }
+
+    /**
+     * This methods increase the number of lives by 1.
+     */
+    public void increaseLives() {
+        this.lives += 1;
+    }
+
+    /**
+     * This method decreases the number of lives by 1.
+     */
+    public void decreaseLives() {
+        this.lives -= 1;
+    }
+
+    /**
+     * This method returns the immunity status.
+     */
+    public boolean getImmunity() {
+        return this.immunity;
+    }
+
+    /**
+     * Setter method for the immunity attribute.
+     *
+     * @param status for immunity
+     */
+    public void setImmunity(Boolean status) {
+        this.immunity = status;
+    }
+
 }

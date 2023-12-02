@@ -19,8 +19,11 @@ public class DefaultPlayer extends Player {
      */
     public DefaultPlayer(Room currentRoom) {
         this.inventory = new ArrayList<AdventureObject>();
+        this.powerInv = new ArrayList<AdventureObject>();
         this.currentRoom = currentRoom;
         this.atkPower = 100;
         this.defPower = 100;
+        this.lives = 3;
+        this.immunity = false;
     }
 }

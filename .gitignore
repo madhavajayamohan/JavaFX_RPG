@@ -1,5 +1,7 @@
-*.xml
-*.inl
-.idea/
+.*/
 out/
-.DS_Store
+*.xml
+*.iml
+*.log
+*.class
+*.DS_Store

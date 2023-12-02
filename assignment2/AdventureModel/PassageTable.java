@@ -57,7 +57,8 @@ public class PassageTable implements Serializable {
      */
     public boolean optionExists(String direction) {
         for (Passage m : this.passageTable) {
-            if (m.getDirection().equals(direction)) return true;
+            String dels = m.getDirection();
+            if (dels.equals(direction)) return true;
         }
         return false;
     }

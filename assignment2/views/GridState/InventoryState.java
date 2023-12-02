@@ -4,6 +4,7 @@ import AdventureModel.AdventureObject;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 public class InventoryState extends GridStateWithItems
 {
     VBox objectsInInventory = new VBox(); //to hold inventory items
-    VBox powerUps; //to hold accrued power-ups
+    VBox powerUps = new VBox(); //to hold accrued power-ups
     VBox achievements; //to hold any achievements
 
     Button exitButton; //button to return back to Traversal Screen
@@ -81,21 +82,25 @@ public class InventoryState extends GridStateWithItems
         inventoryLabel.setAlignment(Pos.CENTER);
         inventoryLabel.setStyle("-fx-text-fill: white;");
         inventoryLabel.setFont(new Font("Arial", 30));
+        inventoryLabel.setWrapText(true);
 
         objLabel =  new Label("Objects in Inventory");
         objLabel.setAlignment(Pos.CENTER);
         objLabel.setStyle("-fx-text-fill: white;");
         objLabel.setFont(new Font("Arial", textSize));
+        objLabel.setWrapText(true);
 
         powerUpLabel =  new Label("Power Ups");
         powerUpLabel.setAlignment(Pos.CENTER);
         powerUpLabel.setStyle("-fx-text-fill: white;");
         powerUpLabel.setFont(new Font("Arial", textSize));
+        powerUpLabel.setWrapText(true);
 
         achivementLabel =  new Label("Achievements");
         achivementLabel.setAlignment(Pos.CENTER);
         achivementLabel.setStyle("-fx-text-fill: white;");
         achivementLabel.setFont(new Font("Arial", textSize));
+        achivementLabel.setWrapText(true);
 
         //add all the widgets to the GridPane
         grid.add(inventoryLabel, 0, 0, 1, 1 );  // Add label
@@ -106,7 +111,6 @@ public class InventoryState extends GridStateWithItems
 
         updateScene(""); //method displays an image and whatever text is supplied
     }
-
     @Override
     public void updateScene(String s)
     {
@@ -114,16 +118,23 @@ public class InventoryState extends GridStateWithItems
         updatePowerUps();
         updateAchievements();
 
+        inventoryLabel.setFont(new Font("Arial", textSize));
         objLabel.setFont(new Font("Arial", textSize));
         powerUpLabel.setFont(new Font("Arial", textSize));
         achivementLabel.setFont(new Font("Arial", textSize));
-        exitButton.setFont(new Font("Arial", textSize));
     }
 
     @Override
     public void updateItems() {
         objectsInInventory.getChildren().clear();
         //write some code here to add images of objects in a given room to the objectsInRoom Vbox
+        grid.setPadding(new Insets(20));
+        grid.setBackground(new Background(new BackgroundFill(
+                Color.valueOf(Backgcolor),
+                new CornerRadii(0),
+                new Insets(0)
+        )));
+
         ArrayList<String> playerInv = this.view.model.player.getInventory();
         for (String x : playerInv) {
             Image currImg = new Image(this.view.model.getDirectoryName() + "/objectImages/" + x + ".jpg");
@@ -143,10 +154,62 @@ public class InventoryState extends GridStateWithItems
 
         ScrollPane scO = new ScrollPane(objectsInInventory);
         scO.setPadding(new Insets(10));
-        scO.setStyle("-fx-background: #000000; -fx-background-color:transparent;");
+
+        switch (Backgcolor) {
+            case "Black":
+                grid.setBackground(new Background(new BackgroundFill(
+                        Color.BLACK,
+                        new CornerRadii(0),
+                        new Insets(0)
+                )));
+                scO.setStyle("-fx-background: "+ Backgcolor + " ; -fx-background-color:" + Backgcolor +" ;");
+                break;
+            case "Grey":
+                grid.setBackground(new Background(new BackgroundFill(
+                        Color.GREY,
+                        new CornerRadii(0),
+                        new Insets(0)
+                )));
+                scO.setStyle("-fx-background: "+ Backgcolor + " ; -fx-background-color:" + Backgcolor +" ;");
+                break;
+            case "Pink":
+                grid.setBackground(new Background(new BackgroundFill(
+                        Color.PINK,
+                        new CornerRadii(0),
+                        new Insets(0)
+                )));
+                scO.setStyle("-fx-background: "+ Backgcolor + " ; -fx-background-color:" + Backgcolor +" ;");
+                break;
+            case "Orange":
+                grid.setBackground(new Background(new BackgroundFill(
+                        Color.ORANGE,
+                        new CornerRadii(0),
+                        new Insets(0)
+                )));
+                scO.setStyle("-fx-background: "+ Backgcolor + " ; -fx-background-color:" + Backgcolor +" ;");
+                break;
+            case "Rosy Orange":
+                grid.setBackground(new Background(new BackgroundFill(
+                        Color.ROSYBROWN,
+                        new CornerRadii(0),
+                        new Insets(0)
+                )));
+                scO.setStyle("-fx-background: "+ Backgcolor + " ; -fx-background-color:" + Backgcolor +" ;");
+                break;
+
+            default:
+                // Handle unknown color
+                break;
+        }
+
+//        scO.setStyle("-fx-background: "+ Backgcolor + " ; -fx-background-color:" + Backgcolor +" ;");
         scO.setFitToWidth(true);
         scO.setFitToHeight(true);
         grid.add(scO,0,2, 1, 1);
+
+        ColorAdjust bright = new ColorAdjust();
+        bright.setBrightness(brightness);
+        grid.setEffect(bright);
     }
 
     /**
@@ -154,7 +217,33 @@ public class InventoryState extends GridStateWithItems
      */
     public void updatePowerUps()
     {
-        // To be implemented
+        powerUps.getChildren().clear();
+        ArrayList<String> playerInv = this.view.model.player.getPowerInventory();
+        for (String x : playerInv) {
+            Image img = new Image(this.view.model.getDirectoryName() + "/objectImages/" + x + ".jpg");
+            ImageView imgView = new ImageView(img);
+            imgView.setFitWidth(100);
+            imgView.setPreserveRatio(true);
+            Button button = new Button(x, imgView);
+            button.setContentDisplay(ContentDisplay.TOP);
+            makeButtonAccessible(button, x + " Object Button", "This button represents the " + x + " object.", "This button represents the object " + x + ". Click it to pick up the object.");
+            button.setOnAction(e -> {
+                this.view.model.interpretAction("drop " + x);
+                updateScene("");
+            });
+            powerUps.getChildren().add(button);
+        }
+
+        ScrollPane scO = new ScrollPane(powerUps);
+        scO.setPadding(new Insets(10));
+        scO.setStyle("-fx-background: #000000; -fx-background-color:transparent;");
+        scO.setFitToWidth(true);
+        scO.setFitToHeight(true);
+        grid.add(scO,1,2, 1, 1);
+
+        ColorAdjust bright = new ColorAdjust();
+        bright.setBrightness(brightness);
+        grid.setEffect(bright);
     }
 
     /**
