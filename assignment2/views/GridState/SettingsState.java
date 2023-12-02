@@ -1,5 +1,6 @@
 package views.GridState;
 
+import AdventureModel.AdventureGame;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -177,8 +178,6 @@ public class SettingsState extends GridState
         ColorAdjust bright = new ColorAdjust();
         bright.setBrightness(brightness);
         this.view.currGrid.setEffect(bright);
-        grid.setEffect(bright);
-        // To be added to
     }
 
     /**
@@ -192,11 +191,11 @@ public class SettingsState extends GridState
     }
 
     /**
-     * Adds a slider event to brightnessControl
+     * Adds a slider event to brightnessControl.
+     * Min value is -0.5 and max value is 0.5
      */
     public void addSliderEvent()
     {
-        //To be implemented
         brightnessControl.setOnMouseDragged(e -> {
             brightness = brightnessControl.getValue();
             updateScene("");
