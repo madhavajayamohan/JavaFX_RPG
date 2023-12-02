@@ -41,18 +41,30 @@ public class Room implements Serializable {
     private boolean isVisited;
 
     /**
+     * The hint for the room.
+     */
+    private String hint;
+
+    /**
+     * A boolean to store if the room has a debuff status or not
+     */
+    private boolean debuffed;
+
+    /**
      * AdvGameRoom constructor.
      *
      * @param roomName: The name of the room.
      * @param roomNumber: The number of the room.
      * @param roomDescription: The description of the room.
      */
-    public Room(String roomName, int roomNumber, String roomDescription, String adventureName){
+    public Room(String roomName, int roomNumber, String roomDescription, String adventureName, String hint, String debuff){
         this.roomName = roomName;
         this.roomNumber = roomNumber;
         this.roomDescription = roomDescription;
         this.adventureName = adventureName;
         this.isVisited = false;
+        this.hint = hint;
+        this.debuffed = debuff.equalsIgnoreCase("true");
     }
 
 
@@ -193,5 +205,22 @@ public class Room implements Serializable {
         return this.motionTable;
     }
 
+    /**
+     * Getter method for the hint attribute.
+     *
+     * @return: hint for the room
+     */
+    public String getHint(){
+        return this.hint;
+    }
+
+    /**
+     * Getter method for the debuff attribute.
+     *
+     * @return: debuff status of the room
+     */
+    public boolean getDebuff(){
+        return this.debuffed;
+    }
 
 }
