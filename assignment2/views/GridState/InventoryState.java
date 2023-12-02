@@ -137,7 +137,19 @@ public class InventoryState extends GridStateWithItems
             makeButtonAccessible(button, x + " Object Button", "This button represents the " + x + " object.", "This button represents the object " + x + ". Click it to pick up the object.");
             button.setOnAction(e -> {
                 this.view.model.interpretAction("drop " + x);
+                this.view.say("You have dropped " + x);
                 updateScene("");
+            });
+            button.setOnMouseEntered(e -> {
+                AdventureObject obj = this.view.model.player.inventory.get(0);
+
+                for(AdventureObject o : this.view.model.player.inventory)
+                {
+                    if(x.equals(o.getName()))
+                        obj = o;
+                }
+
+                this.view.say(obj.getName() +  obj.getDescription());
             });
             objectsInInventory.getChildren().add(button);
         }
@@ -176,6 +188,7 @@ public class InventoryState extends GridStateWithItems
     public void addExitEvent() {
         exitButton.setOnAction(e -> {
             grid.requestFocus();
+            this.view.say("You are exiting the Inventory and going to  the main screen.");
             this.view.changeState("Traversal");
         });
     }

@@ -34,12 +34,10 @@ import static javafx.scene.paint.Paint.valueOf;
 public class GameTrollState extends TrollState {
 
     Button saveButton, loadButton, replayButton, settingsButton; //buttons
-    Boolean helpToggle = false; //is help on display?
 
     Label trollStatusLabel, playerStatusLabel, trollHPLabel, playerHPLabel, trollBaseAttack, playerBaseAttack, playerBaseDefense, playerLivesLabel, commandLabel;
     String trollSpeak = "You, puny human, dare to come on this path?\n" +
-                        "These chambers are only meant for the strong– and no human is strong.\n" +
-                        "These chambers are only meant for the strong– and no human is strong.\n" +
+                        "These chambers are only meant for the strong, and no human is strong.\n" +
                         "Oho? I see that you can use some magic. Very well, then.\n" +
                         "Let us see how your magic matches up to my strength.\n\n" +
                         "LET US DO BATTLE!!!!\n\n" +
@@ -49,17 +47,13 @@ public class GameTrollState extends TrollState {
 
     String instructionText = "[You have two choices: select A, for Attack, or D, for Defense.]\n" +
                              "[Then, to activate your magic, guess an integer from 0 to 100]\n" +
-                             "[The system will generate a random integer–\n" +
+                             "[The system will generate a random integer\n" +
                              "the closer to that number, the more effective your attack or defense]\n" +
-                             "[If you happen to select the random integer– your spell will gain immense power!!!]\n" +
-                             "[Defensive spells will perfectly shield you, and attacking spells wilL greatly damage your opponent!]\n" +
+                             "[If you happen to select the random integer your spell will gain immense power!!!]\n" +
+                             "[Defensive spells will perfectly shield you, and attacking spells will greatly damage your opponent!]\n" +
                              "[If you want to do an Attack and guess 50 as a number between 0-100, enter A 50 in the textbox]\n" +
                              "[If you want to defend instead, with a guess of 50, enter D 50 in the textbox.]\n";
 
-    Label roomDescLabel = new Label(); //to hold room description and/or instructions
-    VBox objectsInRoom = new VBox(); //to hold room items
-    VBox objectsInInventory = new VBox(); //to hold inventory items
-    ImageView roomImageView; //to hold room image
     TextField inputTextField; //for user input
 
     Label mainText = new Label();
@@ -263,7 +257,7 @@ public class GameTrollState extends TrollState {
                     inputTextField.setText("");
                 }
                 if (event.getCode().equals(KeyCode.TAB)) {
-                    objectsInRoom.requestFocus();
+                    saveButton.requestFocus();
                     inputTextField.setText("");
                 }
             }
@@ -283,7 +277,7 @@ public class GameTrollState extends TrollState {
         if(inputText.equals("B") && !gameStart)
         {
             gameStart = true;
-            updateScene(instructionText + "\nTurn " + turnCounter + "\n" + "Please enter your move: \n");
+            updateScene(turnCounter + "\n" + "Please enter your move: \n");
         }
         else if(gameStart)
         {
@@ -362,6 +356,26 @@ public class GameTrollState extends TrollState {
         bright.setBrightness(brightness);
         grid.setEffect(bright);
         this.view.stage.sizeToScene();
+        PauseTransition pause = new PauseTransition(Duration.seconds(1));
+
+        if(!gameStart && s.equals(trollSpeak + instructionText + "\nAre you ready to play? (Enter B to start playing)")) {
+            pause.setOnFinished(event -> {
+                this.view.say("You, puny human, dare to come on this path?\n" +
+                        "These chambers are only meant for the strong and no human is strong.\n" +
+                        "Oho? I see that you can use some magic. Very well, then.\n" +
+                        "Let us see how your magic matches up to my strength.\n\n");
+                this.view.say("LET US DO BATTLE!!!");
+                this.view.say("QUEST: DEFEAT THE TROLL");
+                this.view.say(instructionText);
+                this.view.say("Are you ready to play? (Enter B to start playing)");
+            });
+            pause.play();
+        } else {
+            pause.setOnFinished(event -> {
+                this.view.say(s);
+            });
+            pause.play();
+        }
     }
 
     /**
@@ -378,6 +392,7 @@ public class GameTrollState extends TrollState {
     public boolean playGame() {
         if(trollHP <= 0) {
             updateScene("YOU HAVE WON!!!!");
+
             mainText.setFont(new Font("Arial", 70));
 
             PassageTable passages = this.player.getCurrentRoom().getMotionTable();
@@ -453,56 +468,55 @@ public class GameTrollState extends TrollState {
      * Represents a turn of the game.
      */
     public void runTurn() {
-        String newText = instructionText + "\nTurn " + turnCounter + "\n";
-
         String attackChoice = commandList[0];
         int guess = Integer.parseInt(commandList[1]);
+        String speechText = "";
 
         int tAttk = (trollAttack - 50) + (int) (100 * Math.random()) + 1; //Troll Attack
         int randNumber = (int) (100 * Math.random()) + 1;
         int difference = Math.abs(randNumber - guess);
 
         if(guess < 0 && guess > 100)
-            newText += "As you guessed an out of range number, your spell failed!\n";
+            speechText += "As you guessed an out of range number, your spell failed!\n";
         else if(attackChoice.equals("A"))
         {
             int pAttk = 0;
             if(difference == 0) {
                 pAttk = (int) (this.player.getAttackPower() * 3);
-                newText += "Incredible! Your guess matched the random number!\n";
-                newText += "Your spell gains incredible power!\n";
-                newText += "Your spell does " + pAttk + " damage!\n";
+                speechText += "Incredible! Your guess matched the random number!\n";
+                speechText += "Your spell gains incredible power!\n";
+                speechText += "Your spell does " + pAttk + " damage!\n";
             }
             else {
                 pAttk = (int) (this.player.getAttackPower() * 2 * ((100 - difference) / 100.0));
-                newText += "The random number was " + randNumber + "\n";
-                newText += "Your spell does " + pAttk + " damage!\n\n";
+                speechText += "The random number was " + randNumber + "\n";
+                speechText += "Your spell does " + pAttk + " damage!\n\n";
             }
 
             trollHP -= pAttk;
             playerHP -= tAttk;
-            newText += "The troll's attack does + " + tAttk + " damage!\n\n";
+            speechText += "The troll's attack does + " + tAttk + " damage!\n\n";
         }
         else if(attackChoice.equals("D")) {
             int newTAttk = 0;
             if(difference == 0) {
-                newText += "Incredible! Your guess matched the random number!\n";
-                newText += "Your spell gains incredible power!\n";
-                newText += "You have nullified the troll's attack\n";
+                speechText += "Incredible! Your guess matched the random number!\n";
+                speechText += "Your spell gains incredible power!\n";
+                speechText += "You have nullified the troll's attack\n";
             }
             else {
                 double damageNullified = (double) (this.player.getDefensePower()) / (difference + this.player.getDefensePower());
                 newTAttk = (int) (tAttk * damageNullified);
-                newText += "The random number was " + randNumber + "\n";
-                newText += "Your spell reduced troll attack  damage from " + tAttk + " to " + newTAttk + " points!\n\n";
+                speechText += "The random number was " + randNumber + "\n";
+                speechText += "Your spell reduced troll attack  damage from " + tAttk + " to " + newTAttk + " points!\n\n";
             }
 
             playerHP -= newTAttk;
-            newText += "The troll's attack does " + newTAttk + " damage!\n\n";
+            speechText += "The troll's attack does " + newTAttk + " damage!\n\n";
         }
 
-        newText += "Enter your next move: ";
-        updateScene(newText);
+        speechText += "Enter your next move: ";
+        updateScene(speechText);
         turnCounter += 1;
     }
 
@@ -514,6 +528,7 @@ public class GameTrollState extends TrollState {
         saveButton.setOnAction(e -> {
             grid.requestFocus();
             SaveView saveView = new SaveView(this.view);
+            this.view.say("You are trying to save your game.");
         });
     }
 
@@ -525,6 +540,7 @@ public class GameTrollState extends TrollState {
         loadButton.setOnAction(e -> {
             grid.requestFocus();
             LoadView loadView = new LoadView(this.view);
+            this.view.say("You are trying to load a new game.");
         });
     }
 
@@ -535,7 +551,8 @@ public class GameTrollState extends TrollState {
     public void addReplayEvent() {
         replayButton.setOnAction(e -> {
             grid.requestFocus();
-            // Needs to be implemented
+            this.view.say("You are trying to replay the game instructions.");
+            this.view.say(instructionText);
         });
     }
 
@@ -547,6 +564,7 @@ public class GameTrollState extends TrollState {
         settingsButton.setOnAction(e -> {
             grid.requestFocus();
             this.view.changeState("Settings");
+            this.view.say("You are exiting the main screen and going to the Settings.");
         });
     }
 }

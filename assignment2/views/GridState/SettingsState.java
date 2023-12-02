@@ -187,7 +187,14 @@ public class SettingsState extends GridState
     public void addExitEvent() {
         exitButton.setOnAction(e -> {
             grid.requestFocus();
-            this.view.changeState("Traversal");
+
+            if(this.view.inTrollGame) {
+                this.view.changeState("Troll");
+                this.view.say("You are exiting the Settings, and going to the troll game");
+            } else {
+                this.view.changeState("Traversal");
+                this.view.say("You are exiting the Settings, and going to the main screen");
+            }
         });
     }
 
@@ -204,6 +211,7 @@ public class SettingsState extends GridState
         brightnessControl.setOnMouseClicked(e -> {
             brightness = brightnessControl.getValue();
             updateScene("");
+            this.view.say("You are changing brightness");
         });
     }
 
@@ -224,6 +232,7 @@ public class SettingsState extends GridState
             grid.requestFocus();
             textSize += 5;
             updateScene("");
+            this.view.say("You are increasing text size");
         });
     }
 
@@ -236,6 +245,7 @@ public class SettingsState extends GridState
             grid.requestFocus();
             textSize -= 5;
             updateScene("");
+            this.view.say("You are decreasing text size");
         });
     }
 

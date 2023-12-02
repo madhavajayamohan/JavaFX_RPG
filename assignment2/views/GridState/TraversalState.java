@@ -1,6 +1,7 @@
 package views.GridState;
 
 import AdventureModel.AdventureObject;
+import AdventureModel.Room;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -364,7 +365,13 @@ public class TraversalState extends GridStateWithItems
         this.view.stage.sizeToScene();
 
         //finally, articulate the description
-        if (textToDisplay == null || textToDisplay.isBlank()) view.articulateRoomDescription();
+        //if (textToDisplay == null || textToDisplay.isBlank()) view.articulateRoomDescription();
+        PauseTransition pause = new PauseTransition(Duration.seconds(1));
+
+        pause.setOnFinished(event -> {
+            this.view.say(roomDescLabel.getText());
+        });
+        pause.play();
     }
     /**
      * formatText
@@ -439,6 +446,9 @@ public class TraversalState extends GridStateWithItems
             currButton.setOnAction(e -> {
                 submitEvent("take " + x.getName());
             });
+            currButton.setOnMouseEntered(e -> {
+                this.view.say(x.getName() +  x.getDescription());
+            });
             objectsInRoom.getChildren().add(currButton);
         }
 
@@ -493,6 +503,13 @@ public class TraversalState extends GridStateWithItems
             helpPane.setStyle("-fx-background-color: #000000;");
             grid.add(helpPane, 1, 1);
             helpToggle = true;
+
+            PauseTransition pause = new PauseTransition(Duration.seconds(1));
+
+            pause.setOnFinished(event -> {
+                this.view.say(this.view.model.getInstructions());
+            });
+            pause.play();
         }
     }
 
@@ -515,6 +532,7 @@ public class TraversalState extends GridStateWithItems
         saveButton.setOnAction(e -> {
             grid.requestFocus();
             SaveView saveView = new SaveView(this.view);
+            this.view.say("You are trying to save your game.");
         });
     }
 
@@ -526,27 +544,43 @@ public class TraversalState extends GridStateWithItems
         loadButton.setOnAction(e -> {
             grid.requestFocus();
             LoadView loadView = new LoadView(this.view);
+            this.view.say("You are trying to load a new game.");
         });
     }
 
+    /**
+     * This method handles the event related to the
+     * inventory button.
+     */
     public void addInventEvent() {
         inventButton.setOnAction(e -> {
             grid.requestFocus();
             this.view.changeState("Inventory");
+            this.view.say("You are exiting the main screen and going to the Inventory.");
         });
     }
 
+    /**
+     * This method handles the event related to the
+     * replay button.
+     */
     public void addReplayEvent() {
         replayButton.setOnAction(e -> {
             grid.requestFocus();
-            // Needs to be implemented
+            this.view.say("You are trying to replay room description.");
+            this.view.say(roomDescLabel.getText());
         });
     }
 
+    /**
+     * This method handles the event related to the
+     * settings button.
+     */
     public void addSettingsEvent() {
         settingsButton.setOnAction(e -> {
             grid.requestFocus();
             this.view.changeState("Settings");
+            this.view.say("You are exiting the main screen and going to the Settings.");
         });
     }
 }
