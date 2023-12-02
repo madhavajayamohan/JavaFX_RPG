@@ -253,7 +253,7 @@ public class TraversalState extends GridStateWithItems
         //try to move!
         String output = this.view.model.interpretAction(text); //process the command!
 
-        if (output == null || (!output.equals("GAME OVER") && !output.equals("FORCED") && !output.equals("HELP"))) {
+        if (output == null || (!output.equals("GAME OVER") && !output.equals("FORCED") && !output.equals("HELP"))  && !output.equals("QUIT")) {
             updateScene(output);
             updateItems();
             for (Node x : grid.getChildren()) {
@@ -276,6 +276,10 @@ public class TraversalState extends GridStateWithItems
                 Platform.exit();
             });
             pause.play();
+        } else if (output.equals("QUIT")) {
+            updateScene("Quitting the game");
+            updateItems();
+            Platform.exit();
         } else if (output.equals("FORCED")) {
             //write code here to handle "FORCED" events!
             //Your code will need to display the image in the

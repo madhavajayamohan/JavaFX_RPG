@@ -22,17 +22,15 @@ public class BasicAdventureTest {
         assertEquals("a water bird", objects);
     }
     @Test
-    void properObjectDescTest() throws IOException {
+    void properObjectDescTestRoom1() throws IOException {
         AdventureGame game = new AdventureGame("TinyGame");
         HashMap<Integer, Room> rooms = game.getRooms();
         assertEquals("a water bird", rooms.get(1).objectsInRoom.get(0).getDescription());
     }
     @Test
-    void properObjectDescTest2() throws IOException {
+    void properObjectDescTestRoom2() throws IOException {
         AdventureGame game = new AdventureGame("TinyGame");
         HashMap<Integer, Room> rooms = game.getRooms();
         assertEquals("a pirate chest", rooms.get(2).objectsInRoom.get(0).getDescription());
     }
-
-
 }

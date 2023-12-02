@@ -17,6 +17,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.util.Arrays;
 
 
 /**
@@ -102,34 +103,8 @@ public class LoadView {
      * @param listView the ListView containing all the .ser files in the Games/Saved directory.
      */
     private void getFiles(ListView<String> listView) {
-        String separator = File.separator;
-        File directory = new File("Games" + separator + "Saved");
-
-        File autoSavesDir = new File("Games" + separator + "AutoSaves");
-        File[] autoSaveFiles = autoSavesDir.listFiles();
-        if (autoSaveFiles != null) {
-            if (autoSaveFiles.length == 1) {
-                listView.getItems().add(autoSaveFiles[autoSaveFiles.length - 1].getName());
-            } else if (autoSaveFiles.length == 2) {
-                listView.getItems().add(autoSaveFiles[autoSaveFiles.length - 1].getName());
-                listView.getItems().add(autoSaveFiles[autoSaveFiles.length - 2].getName());
-            } else if (autoSaveFiles.length >= 3) {
-                for (int i = 0; i < 3; i++) {
-                    listView.getItems().add(autoSaveFiles[i].getName());
-                }
-            }
-        }
-
-        if (directory.exists()) {
-            File files[] = directory.listFiles();
-            if (files != null) {
-                for (File x : files) {
-                    if (x.isFile() && x.getName().endsWith(".ser")) {
-                        listView.getItems().add(x.getName());
-                    }
-                }
-            }
-        }
+        Saves saves = new Saves(listView, this.adventureGameView, this.selectGameLabel);
+        saves.listFiles();
     }
 
     /**
@@ -143,50 +118,126 @@ public class LoadView {
      * @param GameList the ListView to populate
      */
     private void selectGame(Label selectGameLabel, ListView<String> GameList) throws IOException {
-        //saved games will be in the Games/Saved folder!
-        String separator = File.separator;
-        String selected = GameList.getSelectionModel().getSelectedItem();
-        String dir = "Games" + separator + "Saved" + separator + GameList.getSelectionModel().getSelectedItem();
-        this.adventureGameView.stopArticulation();
-        try {
-            if (selected.startsWith("Autosave")) {
-                String autoSaveDir = "Games" + separator + "AutoSaves" + separator + GameList.getSelectionModel().getSelectedItem();
-                this.adventureGameView.model = loadGame(autoSaveDir);
-            } else {
-                this.adventureGameView.model = loadGame(dir);
-            }
-            this.adventureGameView.updateScene("");
-            this.adventureGameView.updateItems();
-            selectGameLabel.setText(GameList.getSelectionModel().getSelectedItem());
-        } catch (ClassNotFoundException e) {
-            String newGameDir = this.adventureGameView.model.getDirectoryName();
-            AdventureGame newGame = new AdventureGame(newGameDir.substring(6, newGameDir.length()));
-            newGame.setUpGame();
-            this.adventureGameView.model = newGame;
-            this.adventureGameView.updateScene("");
-            this.adventureGameView.updateItems();
-            selectGameLabel.setText("ERROR: STARTING NEW GAME");
-        }
+        new Saves(GameList, this.adventureGameView, selectGameLabel).startGame();
     }
 
     /**
-     * Load the Game from a file
+     * Class Saves.
      *
-     * @param GameFile file to load
-     * @return loaded Tetris Model
+     * Acts as the Memento Class in the MEMENTO DESIGN PATTERN.
+     * Handles the getting and  populating of save files, and the restoring of a save file.
      */
-    public AdventureGame loadGame(String GameFile) throws IOException, ClassNotFoundException {
-        // Reading the object from a file
-        FileInputStream file = null;
-        ObjectInputStream in = null;
-        try {
-            file = new FileInputStream(GameFile);
-            in = new ObjectInputStream(file);
-            return (AdventureGame) in.readObject();
-        } finally {
-            if (in != null) {
-                in.close();
-                file.close();
+    public static class Saves {
+
+        private final ListView<String> listView; // List of save files
+        private final AdventureGameView adventureGameView; // Current AdventureGameView snapshot
+        private final Label selectGameLabel; // Labels for successful/unsuccessful restoring of a save file
+
+        /**
+         * Saves Constructor
+         * --------------------------------------
+         * The constructor sets up the listView, the view, and the selectGameLabel
+         *
+         * @param listView the populated list of save files
+         * @param view the current AdventureGameView snapshot
+         * @param selectGameLabel Labels for successful/unsuccessful restoration of save files
+         */
+        private Saves(ListView<String> listView, AdventureGameView view, Label selectGameLabel) {
+            this.listView = listView;
+            this.adventureGameView = view;
+            this.selectGameLabel = selectGameLabel;
+        }
+
+        /**
+         * listFiles method
+         * Populates the listView with all the save files available.
+         * The folder containing save files acts as the Editor class. Instead of a stack/list, the folder acts as one,
+         * containing all the saves.
+         */
+        private void listFiles() {
+            String separator = File.separator;
+            File directory = new File("Games" + separator + "Saved");
+
+            File autoSavesDir = new File("Games" + separator + "AutoSaves");
+            File[] autoSaveFiles = autoSavesDir.listFiles();
+            if (autoSaveFiles != null) {
+                Arrays.sort(autoSaveFiles);
+                if (autoSaveFiles.length == 1) {
+                    listView.getItems().add(autoSaveFiles[autoSaveFiles.length - 1].getName());
+                } else if (autoSaveFiles.length == 2) {
+                    listView.getItems().add(autoSaveFiles[autoSaveFiles.length - 1].getName());
+                    listView.getItems().add(autoSaveFiles[autoSaveFiles.length - 2].getName());
+                } else if (autoSaveFiles.length >= 3) {
+                    for (int i = autoSaveFiles.length - 1; i > autoSaveFiles.length - 4; i--) {
+                        listView.getItems().add(autoSaveFiles[i].getName());
+                    }
+                }
+            }
+
+            if (directory.exists()) {
+                File files[] = directory.listFiles();
+                if (files != null) {
+                    for (File x : files) {
+                        if (x.isFile() && x.getName().endsWith(".ser")) {
+                            listView.getItems().add(x.getName());
+                        }
+                    }
+                }
+            }
+        }
+
+        /**
+         * startGame method
+         * Handles the restoration of a save file.
+         * Acts similarly to an "undo" function in the memento design pattern.
+         * @throws IOException
+         */
+        private void startGame() throws IOException {
+            //saved games will be in the Games/Saved folder!
+            String separator = File.separator;
+            String selected = listView.getSelectionModel().getSelectedItem();
+            String dir = "Games" + separator + "Saved" + separator + listView.getSelectionModel().getSelectedItem();
+            this.adventureGameView.stopArticulation();
+            try {
+                if (selected.startsWith("Autosave")) {
+                    String autoSaveDir = "Games" + separator + "AutoSaves" + separator + listView.getSelectionModel().getSelectedItem();
+                    this.adventureGameView.model = loadGame(autoSaveDir);
+                } else {
+                    this.adventureGameView.model = loadGame(dir);
+                }
+                this.adventureGameView.updateScene("");
+                this.adventureGameView.updateItems();
+                selectGameLabel.setText(listView.getSelectionModel().getSelectedItem());
+            } catch (ClassNotFoundException e) {
+                String newGameDir = this.adventureGameView.model.getDirectoryName();
+                AdventureGame newGame = new AdventureGame(newGameDir.substring(6, newGameDir.length()));
+                newGame.setUpGame();
+                this.adventureGameView.model = newGame;
+                this.adventureGameView.updateScene("");
+                this.adventureGameView.updateItems();
+                selectGameLabel.setText("ERROR: STARTING NEW GAME");
+            }
+        }
+
+        /**
+         * Load the Game from a file
+         *
+         * @param GameFile file to load
+         * @return loaded Tetris Model
+         */
+        public AdventureGame loadGame(String GameFile) throws IOException, ClassNotFoundException {
+            // Reading the object from a file
+            FileInputStream file = null;
+            ObjectInputStream in = null;
+            try {
+                file = new FileInputStream(GameFile);
+                in = new ObjectInputStream(file);
+                return (AdventureGame) in.readObject();
+            } finally {
+                if (in != null) {
+                    in.close();
+                    file.close();
+                }
             }
         }
     }
