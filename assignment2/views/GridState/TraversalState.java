@@ -25,6 +25,8 @@ import views.AdventureGameView;
 import views.GridState.GridState;
 import views.LoadView;
 import views.SaveView;
+import javafx.scene.paint.Color;
+
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,6 +47,9 @@ public class TraversalState extends GridStateWithItems
     ImageView roomImageView; //to hold room image
     TextField inputTextField; //for user input
 
+    VBox textEntry = new VBox();
+
+
     public TraversalState(String name, AdventureGameView view)
     {
         super();
@@ -64,7 +69,7 @@ public class TraversalState extends GridStateWithItems
         // GridPane, anyone?
         grid.setPadding(new Insets(20));
         grid.setBackground(new Background(new BackgroundFill(
-                Color.valueOf("#000000"),
+                Color.valueOf(Backgcolor),
                 new CornerRadii(0),
                 new Insets(0)
         )));
@@ -145,6 +150,7 @@ public class TraversalState extends GridStateWithItems
         objLabel.setAlignment(Pos.CENTER);
         objLabel.setStyle("-fx-text-fill: white;");
         objLabel.setFont(new Font("Arial", textSize));
+        objLabel.setTextFill(Color.BLACK);
 
         //add all the widgets to the GridPane
         grid.add( objLabel, 0, 0, 1, 1 );  // Add label
@@ -166,8 +172,7 @@ public class TraversalState extends GridStateWithItems
         addTextHandlingEvent(); //attach an event to this input field
 
         // adding the text area and submit button to a VBox
-        VBox textEntry = new VBox();
-        textEntry.setStyle("-fx-background-color: #000000;");
+        textEntry.setStyle("-fx-background-color: black;");
         textEntry.setPadding(new Insets(20, 20, 20, 20));
         textEntry.getChildren().addAll(commandLabel, inputTextField);
         textEntry.setSpacing(10);
@@ -333,6 +338,8 @@ public class TraversalState extends GridStateWithItems
      */
     public void updateScene(String textToDisplay) {
 
+        grid.setPadding(new Insets(20));
+        grid.setEffect(highContrastEffect);
         getRoomImage(); //get the image of the current room
         formatText(textToDisplay); //format the text to display
         roomDescLabel.setPrefWidth(500);
@@ -342,7 +349,58 @@ public class TraversalState extends GridStateWithItems
         VBox roomPane = new VBox(roomImageView,roomDescLabel);
         roomPane.setPadding(new Insets(10));
         roomPane.setAlignment(Pos.TOP_CENTER);
-        roomPane.setStyle("-fx-background-color: #000000;");
+
+        switch (Backgcolor) {
+            case "Black":
+                grid.setBackground(new Background(new BackgroundFill(
+                        Color.BLACK,
+                        new CornerRadii(0),
+                        new Insets(0)
+                )));
+                objLabel.setTextFill(Color.BLACK);
+                textEntry.setStyle("-fx-background-color: black;");
+                roomPane.setStyle("-fx-background-color: black;");
+
+
+                break;
+            case "Grey":
+                grid.setBackground(new Background(new BackgroundFill(
+                        Color.GREY,
+                        new CornerRadii(0),
+                        new Insets(0)
+                )));
+                objLabel.setTextFill(Color.GREY);
+                textEntry.setStyle("-fx-background-color: grey;");
+                roomPane.setStyle("-fx-background-color: grey;");
+
+
+                break;
+            case "Pink":
+                grid.setBackground(new Background(new BackgroundFill(
+                        Color.PINK,
+                        new CornerRadii(0),
+                        new Insets(0)
+                )));
+                objLabel.setTextFill(Color.PINK);
+                textEntry.setStyle("-fx-background-color: pink;");
+                roomPane.setStyle("-fx-background-color: pink;");
+
+
+                break;
+            case "Orange":
+                grid.setBackground(new Background(new BackgroundFill(
+                        Color.ORANGE,
+                        new CornerRadii(0),
+                        new Insets(0)
+                )));
+                objLabel.setTextFill(Color.ORANGE);
+                textEntry.setStyle("-fx-background-color: orange;");
+                roomPane.setStyle("-fx-background-color: orange;");
+                break;
+            default:
+                // Handle unknown color
+                break;
+        }
 
         inputTextField.setFont(new Font("Arial", textSize));
         objLabel.setFont(new Font("Arial", textSize));
@@ -449,6 +507,23 @@ public class TraversalState extends GridStateWithItems
         ScrollPane scO = new ScrollPane(objectsInRoom);
         scO.setPadding(new Insets(10));
         scO.setStyle("-fx-background: #000000; -fx-background-color:transparent;");
+        switch (Backgcolor) {
+            case "Black":
+                scO.setStyle("-fx-background: black; -fx-background-color:black;");
+                break;
+            case "Grey":
+                scO.setStyle("-fx-background: grey; -fx-background-color:grey;");
+                break;
+            case "Pink":
+                scO.setStyle("-fx-background: pink; -fx-background-color:pink;");
+                break;
+            case "Orange":
+                scO.setStyle("-fx-background: orange; -fx-background-color:orange;");
+                break;
+            default:
+                // Handle unknown color
+                break;
+        }
         scO.setFitToWidth(true);
         grid.add(scO,0,1);
     }
