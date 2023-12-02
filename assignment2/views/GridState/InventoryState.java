@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class InventoryState extends GridStateWithItems
 {
     VBox objectsInInventory = new VBox(); //to hold inventory items
-    VBox powerUps; //to hold accrued power-ups
+    VBox powerUps = new VBox(); //to hold accrued power-ups
     VBox achievements; //to hold any achievements
 
     Button exitButton; //button to return back to Traversal Screen
@@ -163,7 +163,33 @@ public class InventoryState extends GridStateWithItems
      */
     public void updatePowerUps()
     {
-        // To be implemented
+        powerUps.getChildren().clear();
+        ArrayList<String> playerInv = this.view.model.player.getPowerInventory();
+        for (String x : playerInv) {
+            Image img = new Image(this.view.model.getDirectoryName() + "/objectImages/" + x + ".jpg");
+            ImageView imgView = new ImageView(img);
+            imgView.setFitWidth(100);
+            imgView.setPreserveRatio(true);
+            Button button = new Button(x, imgView);
+            button.setContentDisplay(ContentDisplay.TOP);
+            makeButtonAccessible(button, x + " Object Button", "This button represents the " + x + " object.", "This button represents the object " + x + ". Click it to pick up the object.");
+            button.setOnAction(e -> {
+                this.view.model.interpretAction("drop " + x);
+                updateScene("");
+            });
+            powerUps.getChildren().add(button);
+        }
+
+        ScrollPane scO = new ScrollPane(powerUps);
+        scO.setPadding(new Insets(10));
+        scO.setStyle("-fx-background: #000000; -fx-background-color:transparent;");
+        scO.setFitToWidth(true);
+        scO.setFitToHeight(true);
+        grid.add(scO,1,2, 1, 1);
+
+        ColorAdjust bright = new ColorAdjust();
+        bright.setBrightness(brightness);
+        grid.setEffect(bright);
     }
 
     /**
