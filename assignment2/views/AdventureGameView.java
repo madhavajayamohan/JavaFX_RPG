@@ -24,6 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import javafx.event.EventHandler; //you will need this too!
 import javafx.scene.AccessibleRole;
+import marytts.exceptions.SynthesisException;
 import org.junit.platform.commons.util.StringUtils;
 import views.GridState.*;
 
@@ -34,6 +35,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+
+import marytts.LocalMaryInterface;
+import marytts.MaryInterface;
+import marytts.exceptions.MaryConfigurationException;
+import marytts.signalproc.effects.*;
+import marytts.util.data.audio.AudioPlayer;
+import javax.sound.sampled.AudioInputStream;
+
 
 /**
  * Class AdventureGameView.
@@ -57,12 +66,13 @@ public class AdventureGameView {
 
     public boolean inTrollGame = false;
 
+    public MaryInterface marytts;
+
     private MediaPlayer mediaPlayer; //to play audio
     private boolean mediaPlaying; //to know if the audio is playing
 
     String trollSpeak = "You, puny human, dare to come on this path?\n" +
-            "These chambers are only meant for the strong– and no human is strong.\n" +
-            "These chambers are only meant for the strong– and no human is strong.\n" +
+            "These chambers are only meant for the strong, and no human is strong.\n" +
             "Oho? I see that you can use some magic. Very well, then.\n" +
             "Let us see how your magic matches up to my strength.\n\n" +
             "LET US DO BATTLE!!!!\n\n" +
@@ -72,12 +82,12 @@ public class AdventureGameView {
 
     String instructionText = "[You have two choices: select A, for Attack, or D, for Defense.]\n" +
             "[Then, to activate your magic, guess an integer from 0 to 100]\n" +
-            "[The system will generate a random integer–\n" +
+            "[The system will generate a random integer\n" +
             "the closer to that number, the more effective your attack or defense]\n" +
-            "[If you happen to select the random integer– your spell will gain immense power!!!]\n" +
-            "[Defensive spells will perfectly shield you, and attacking spells wilL greatly damage your opponent!]\n" +
+            "[If you happen to select the random integer your spell will gain immense power!!!]\n" +
+            "[Defensive spells will perfectly shield you, and attacking spells will greatly damage your opponent!]\n" +
             "[If you want to do an Attack and guess 50 as a number between 0-100, enter A 50 in the textbox]\n" +
-            "[If you want to defend instead, with a guess of 50, enter D 50 in the textbox.]";
+            "[If you want to defend instead, with a guess of 50, enter D 50 in the textbox.]\n";
 
     /**
      * Adventure Game View Constructor
@@ -87,7 +97,41 @@ public class AdventureGameView {
     public AdventureGameView(AdventureGame model, Stage stage) {
         this.model = model;
         this.stage = stage;
+
+        try {
+            marytts = new LocalMaryInterface();
+        } catch (MaryConfigurationException e) {
+            System.out.println("MaryTTS error.");
+            //throw new RuntimeException();
+        }
+
+//        for(String voice : this.marytts.getAvailableVoices()) {
+//            System.out.println(voice);
+//        }
+//
+//        this.marytts.setVoice("dfki-spike-hsmm");
+
+
         intiUI();
+    }
+
+    /**
+     * say
+     * @param text
+     *
+     * Reads out text using MaryTTS library
+     */
+    public void say(String text)
+    {
+        try {
+            AudioPlayer ap = new AudioPlayer();
+            AudioInputStream audio = this.marytts.generateAudio(text);
+            ap.setAudio(audio);
+            ap.start();
+            ap.join();
+        } catch (SynthesisException | InterruptedException e) {
+            System.out.println("MaryTTS error.");
+        }
     }
 
     /**
@@ -138,6 +182,12 @@ public class AdventureGameView {
         String musicFile;
         String adventureName = this.model.getDirectoryName();
         String roomName = this.model.getPlayer().getCurrentRoom().getRoomName();
+//        String roomDescription = this.model.getPlayer().getCurrentRoom().getRoomDescription();
+//        String objectDescription = this.model.getPlayer().getCurrentRoom().getObjectString();
+//
+////        say(marytts, roomDescription);
+//        say(marytts, "Objects in this room");
+//        say(marytts, objectDescription);
 
         if (!this.model.getPlayer().getCurrentRoom().getVisited()) musicFile = "./" + adventureName + "/sounds/" + roomName.toLowerCase() + "-long.mp3" ;
         else musicFile = "./" + adventureName + "/sounds/" + roomName.toLowerCase() + "-short.mp3" ;
