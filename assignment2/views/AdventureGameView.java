@@ -1,30 +1,18 @@
 package views;
 
 import AdventureModel.AdventureGame;
-import AdventureModel.AdventureObject;
-import javafx.animation.PauseTransition;
-import javafx.application.Platform;
-import javafx.collections.ObservableList;
-import javafx.event.Event;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
+
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.*;
-import javafx.scene.input.KeyEvent; //you will need these!
-import javafx.scene.input.KeyCode;
-import javafx.scene.text.Font;
+
 import javafx.stage.Stage;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.util.Duration;
-import javafx.event.EventHandler; //you will need this too!
+
 import javafx.scene.AccessibleRole;
-import org.junit.platform.commons.util.StringUtils;
+
 import views.GridState.*;
 
 import java.io.File;
@@ -59,6 +47,11 @@ public class AdventureGameView {
 
     private MediaPlayer mediaPlayer; //to play audio
     private boolean mediaPlaying; //to know if the audio is playing
+    private BackgroundMusic backgroundMusic;
+
+
+
+
 
     String trollSpeak = "You, puny human, dare to come on this path?\n" +
             "These chambers are only meant for the strong– and no human is strong.\n" +
@@ -87,6 +80,7 @@ public class AdventureGameView {
     public AdventureGameView(AdventureGame model, Stage stage) {
         this.model = model;
         this.stage = stage;
+        this.backgroundMusic = BackgroundMusic.getInstance();
         intiUI();
     }
 
@@ -97,6 +91,7 @@ public class AdventureGameView {
 
         // setting up the stage
         this.stage.setTitle("tiowille's Adventure Game"); //Replace <YOUR UTORID> with your UtorID
+
 
         allStates[0] = new TraversalState("Traversal", this);
         currState = allStates[0];
@@ -135,30 +130,39 @@ public class AdventureGameView {
      * This method articulates Room Descriptions
      */
     public void articulateRoomDescription() {
-        String musicFile;
+
+        if (!backgroundMusic.isMediaPlaying()) {
+            backgroundMusic.playBackgroundMusic();
+        }
+        else{
+            backgroundMusic.adjustVolume(0.1);
+        }
+
+        String roomDescriptionFile;
         String adventureName = this.model.getDirectoryName();
         String roomName = this.model.getPlayer().getCurrentRoom().getRoomName();
 
-        if (!this.model.getPlayer().getCurrentRoom().getVisited()) musicFile = "./" + adventureName + "/sounds/" + roomName.toLowerCase() + "-long.mp3" ;
-        else musicFile = "./" + adventureName + "/sounds/" + roomName.toLowerCase() + "-short.mp3" ;
-        musicFile = musicFile.replace(" ","-");
+        if (!this.model.getPlayer().getCurrentRoom().getVisited()) roomDescriptionFile = "./" + adventureName + "/sounds/" + roomName.toLowerCase() + "-long.mp3" ;
+        else roomDescriptionFile = "./" + adventureName + "/sounds/" + roomName.toLowerCase() + "-short.mp3" ;
+        roomDescriptionFile = roomDescriptionFile.replace(" ","-");
 
-        Media sound = new Media(new File(musicFile).toURI().toString());
+        Media sound = new Media(new File(roomDescriptionFile).toURI().toString());
 
-        mediaPlayer = new MediaPlayer(sound);
-        mediaPlayer.play();
+        mediaPlayer1 = new MediaPlayer(sound);
+        mediaPlayer1.play();
         mediaPlaying = true;
+        backgroundMusic.adjustVolume(0.1);
 
     }
-
     /**
      * This method stops articulations
      * (useful when transitioning to a new room or loading a new game)
      */
     public void stopArticulation() {
         if (mediaPlaying) {
-            mediaPlayer.stop(); //shush!
+            mediaPlayer1.stop(); //shush!
             mediaPlaying = false;
+            backgroundMusic.adjustVolume(0.8);
         }
     }
 
