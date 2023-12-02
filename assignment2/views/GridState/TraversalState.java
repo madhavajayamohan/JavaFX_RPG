@@ -45,6 +45,11 @@ public class TraversalState extends GridStateWithItems
     ImageView roomImageView; //to hold room image
     TextField inputTextField; //for user input
 
+    /**
+     * Boolean toggle for hint display
+     */
+    Boolean hintToggle = false;
+
     public TraversalState(String name, AdventureGameView view)
     {
         super();
@@ -244,6 +249,9 @@ public class TraversalState extends GridStateWithItems
             return;
         } else if (text.equalsIgnoreCase("HELP") || text.equalsIgnoreCase("H")) {
             showInstructions();
+            return;
+        } else if (text.equalsIgnoreCase("HINT")) {
+            showHint();
             return;
         } else if (text.equalsIgnoreCase("COMMANDS") || text.equalsIgnoreCase("C")) {
             showCommands(); //this is new!  We did not have this command in A1
@@ -499,6 +507,22 @@ public class TraversalState extends GridStateWithItems
             helpPane.setStyle("-fx-background-color: #000000;");
             grid.add(helpPane, 1, 1);
             helpToggle = true;
+        }
+    }
+
+    /**
+     * Shows the hint for the given room
+     */
+    public void showHint() {
+
+        if (hintToggle) {
+            updateScene("");
+            view.stopArticulation();
+            hintToggle = false;
+        } else {
+            updateScene(this.view.model.player.getCurrentRoom().getHint());
+            view.stopArticulation();
+            hintToggle = true;
         }
     }
 
