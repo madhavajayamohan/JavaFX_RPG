@@ -14,11 +14,11 @@ import views.AdventureGameView;
 import views.GridState.GridState;
 import javafx.scene.effect.ColorAdjust;
 
+
 /**
  * SettingsState. Models the Settings screen game.
  */
-public class SettingsState extends GridState
-{
+public class SettingsState extends GridState {
 
     public Slider brightnessControl; //Slider to change brightness
     public ComboBox backgroundThemeChanger; //Combo box to change background color
@@ -28,8 +28,7 @@ public class SettingsState extends GridState
     public Label settingsLabel, brightnessLabel, backgroundLabel, textLabel, contrastLabel;
     public boolean highContrastModeOn = false;
 
-    public SettingsState(String name, AdventureGameView view)
-    {
+    public SettingsState(String name, AdventureGameView view) {
         super();
         this.name = name;
         this.view = view;
@@ -49,21 +48,21 @@ public class SettingsState extends GridState
         //Three columns, three rows for the GridPane
         ColumnConstraints column1 = new ColumnConstraints(333);
         ColumnConstraints column2 = new ColumnConstraints(333);
-        column2.setHgrow( Priority.SOMETIMES ); //let some columns grow to take any extra space
-        column1.setHgrow( Priority.SOMETIMES );
+        column2.setHgrow(Priority.SOMETIMES); //let some columns grow to take any extra space
+        column1.setHgrow(Priority.SOMETIMES);
 
         // Row constraints
         RowConstraints row1 = new RowConstraints(100);
         RowConstraints row2 = new RowConstraints(100);
         RowConstraints row3 = new RowConstraints();
-        row1.setVgrow( Priority.SOMETIMES );
-        row3.setVgrow( Priority.SOMETIMES );
+        row1.setVgrow(Priority.SOMETIMES);
+        row3.setVgrow(Priority.SOMETIMES);
 
-        grid.getColumnConstraints().addAll( column1 , column2 , column1 );
-        grid.getRowConstraints().addAll( row1 , row2 , row3 );
+        grid.getColumnConstraints().addAll(column1, column2, column1);
+        grid.getRowConstraints().addAll(row1, row2, row3);
 
         //Widgets
-        settingsLabel =  new Label("Settings");
+        Label settingsLabel = new Label("Settings");
         settingsLabel.setFont(new Font("Arial", textSize));
         settingsLabel.setAlignment(Pos.CENTER);
         settingsLabel.setStyle("-fx-text-fill: white;");
@@ -77,7 +76,7 @@ public class SettingsState extends GridState
         AdventureGameView.makeButtonAccessible(exitButton, "Exit Button", "This button exits out of the Inventory.", "This button takes you from inetory back to main screen.");
         addExitEvent();
 
-        brightnessLabel =  new Label("Brightness");
+        brightnessLabel = new Label("Brightness");
         brightnessLabel.setFont(new Font("Arial", textSize));
         brightnessLabel.setAlignment(Pos.CENTER);
         brightnessLabel.setStyle("-fx-text-fill: white;");
@@ -94,7 +93,7 @@ public class SettingsState extends GridState
         brightness.setSpacing(10);
         brightness.setAlignment(Pos.CENTER);
 
-        backgroundLabel =  new Label("Background Theme");
+        backgroundLabel = new Label("Background Theme");
         backgroundLabel.setFont(new Font("Arial", textSize));
         backgroundLabel.setAlignment(Pos.CENTER);
         backgroundLabel.setStyle("-fx-text-fill: white;");
@@ -109,7 +108,7 @@ public class SettingsState extends GridState
         backgroundTheme.setSpacing(10);
         backgroundTheme.setAlignment(Pos.CENTER);
 
-        textLabel =  new Label("Text Size");
+        textLabel = new Label("Text Size");
         textLabel.setFont(new Font("Arial", textSize));
         textLabel.setAlignment(Pos.CENTER);
         textLabel.setStyle("-fx-text-fill: white;");
@@ -140,7 +139,7 @@ public class SettingsState extends GridState
         textChange.setSpacing(10);
         textChange.setAlignment(Pos.CENTER);
 
-        contrastLabel =  new Label("Set High Constrast Mode");
+        contrastLabel = new Label("Set High Constrast Mode");
         contrastLabel.setFont(new Font("Arial", textSize));
         contrastLabel.setAlignment(Pos.CENTER);
         contrastLabel.setStyle("-fx-text-fill: white;");
@@ -150,7 +149,8 @@ public class SettingsState extends GridState
         highContrastButton = new Button("Change Contrast");
         highContrastButton.setId("Contrast");
         highContrastButton.setFont(new Font("Arial", textSize));
-        customizeButton(highContrastButton, 300, 50);
+        highContrastButton.setStyle("-fx-background-color: red;");
+        customizeButton(highContrastButton, 100, 50);
         AdventureGameView.makeButtonAccessible(highContrastButton, "High Contrast Change Toggle", "This button changes high contrast mode.", "This button changes high contrast mode.");
         addContrastEvent();
 
@@ -160,8 +160,8 @@ public class SettingsState extends GridState
         highContrast.setAlignment(Pos.CENTER);
 
         //add all the widgets to the GridPane
-        grid.add( settingsLabel, 0, 0, 1, 1 );  // Add label
-        grid.add( exitButton, 1, 0, 1, 1 );  // Add buttons
+        grid.add(settingsLabel, 0, 0, 1, 1);  // Add label
+        grid.add(exitButton, 1, 0, 1, 1);  // Add buttons
 
         grid.add(textChange, 0, 1, 1, 1);
         grid.add(brightness, 1, 1, 1, 1);
@@ -181,6 +181,42 @@ public class SettingsState extends GridState
         ColorAdjust bright = new ColorAdjust();
         bright.setBrightness(brightness);
         this.view.currGrid.setEffect(bright);
+        grid.setEffect(bright);
+
+        switch (Backgcolor) {
+            case "Black":
+                grid.setBackground(new Background(new BackgroundFill(
+                        Color.BLACK,
+                        new CornerRadii(0),
+                        new Insets(0)
+                )));
+                break;
+            case "Grey":
+                grid.setBackground(new Background(new BackgroundFill(
+                        Color.GREY,
+                        new CornerRadii(0),
+                        new Insets(0)
+                )));
+                break;
+            case "Pink":
+                grid.setBackground(new Background(new BackgroundFill(
+                        Color.PINK,
+                        new CornerRadii(0),
+                        new Insets(0)
+                )));
+                break;
+            case "Orange":
+                grid.setBackground(new Background(new BackgroundFill(
+                        Color.ORANGE,
+                        new CornerRadii(0),
+                        new Insets(0)
+                )));
+                break;
+            default:
+                // Handle unknown color
+                break;
+        }
+        // To be added to
     }
 
     /**
@@ -212,28 +248,30 @@ public class SettingsState extends GridState
     /**
      * Adds a mouse event to the backgroundThemeChanger
      */
-    public void addBackgroundThemeEvent()
-    {
-        //To be implemented
+    public void addBackgroundThemeEvent() {
+        backgroundThemeChanger.getItems().addAll("Black", "Grey", "Pink", "Orange");
+        backgroundThemeChanger.setValue("Black"); // Set default background color
+
+        backgroundThemeChanger.setOnAction(e -> {
+            Backgcolor = (String) backgroundThemeChanger.getValue();
+            updateScene("");
+        });
     }
 
     /**
      * Adds a mouse event to the enlargeButton
      */
-    public void addEnlargeEvent()
-    {
+    public void addEnlargeEvent() {
         enlargeButton.setOnAction(e -> {
             grid.requestFocus();
             textSize += 5;
             updateScene("");
         });
     }
-
     /**
      * Adds a mouse event to the minimizeButton
      */
-    public void addMinimizeEvent()
-    {
+    public void addMinimizeEvent() {
         minimizeButton.setOnAction(e -> {
             grid.requestFocus();
             textSize -= 5;
@@ -244,8 +282,38 @@ public class SettingsState extends GridState
     /**
      * Adds a mouse event to the highContrastButton
      */
-    public void addContrastEvent()
-    {
-        //To be implemented
+    public void addContrastEvent() {
+        highContrastButton.setOnAction(e -> {
+            grid.requestFocus();
+            toggleHighContrastMode();
+        });
+
     }
+
+    private void toggleHighContrastMode() {
+        if (highContrastModeOn) {
+            // If high contrast mode is on, turn it off
+            highContrastModeOn = false;
+            highContrastButton.setStyle("-fx-background-color: red;");
+            highContrastEffect.setContrast(0); // Reset contrast
+            highContrastEffect.setBrightness(0); // Reset brightness
+            highContrastEffect.setSaturation(0); // Reset saturation
+
+        } else {
+            // If high contrast mode is off, turn it on
+            highContrastModeOn = true;
+            highContrastButton.setStyle("-fx-background-color: green;");
+            highContrastEffect.setContrast(0.7); // Increase contrast
+            highContrastEffect.setBrightness(0.5); // Decrease brightness
+            highContrastEffect.setSaturation(0.0); // Increase saturation
+        }
+
+        // Apply the high contrast effect to the grid and other elements
+        applyHighContrastEffect();
+    }
+
+    private void applyHighContrastEffect() {
+        grid.setEffect(highContrastEffect);
+    }
+
 }

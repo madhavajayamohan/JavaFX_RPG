@@ -2,6 +2,7 @@ package views.GridState;
 
 import javafx.scene.AccessibleRole;
 import javafx.scene.control.Button;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import views.AdventureGameView;
@@ -19,6 +20,12 @@ public abstract class GridState
     public AdventureGameView view;
     public static double brightness = 0.0;
     public static double textSize = 16;
+
+    public static String Backgcolor = "black";
+
+    public static ColorAdjust highContrastEffect = new ColorAdjust();
+
+
 
     /**
      * Initialize the UI
@@ -46,6 +53,7 @@ public abstract class GridState
      */
     abstract public void updateScene(String s);
 
+
     void customizeButton(Button inputButton, int w, int h) {
         inputButton.setPrefSize(w, h);
         inputButton.setFont(new Font("Arial", 16));
@@ -59,4 +67,6 @@ public abstract class GridState
         inputButton.setAccessibleHelp(longString);
         inputButton.setFocusTraversable(true);
     }
+
+
 }

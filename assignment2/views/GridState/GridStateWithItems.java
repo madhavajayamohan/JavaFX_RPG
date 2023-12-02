@@ -13,5 +13,7 @@ public abstract class GridStateWithItems extends GridState{
 
     abstract public void updateItems();
 
-
+    void initUI() {
+        // Set the background color of the GridPane to the Backgcolor variable
+    }
 }
