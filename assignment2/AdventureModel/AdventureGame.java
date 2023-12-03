@@ -1,6 +1,8 @@
 package AdventureModel;
 
 import AdventureModel.Players.Decorators.BuffDecorator;
+import AdventureModel.Players.Decorators.DebuffDecorator;
+import AdventureModel.Players.Decorators.DefenseDownDecorator;
 import AdventureModel.Players.Decorators.DefenseUpDecorator;
 import AdventureModel.Players.DefaultPlayer;
 import AdventureModel.Players.Player;
@@ -134,6 +136,15 @@ public class AdventureGame implements Serializable {
 
         int roomNumber = chosen.getDestinationRoom();
         Room room = this.rooms.get(roomNumber);
+        if (room.getDebuff() && !this.player.getImmunity()) {
+            if (room.getRoomNumber() % 2 == 0) {
+                this.player = new DebuffDecorator(this.player);
+            } else {
+                this.player = new DefenseDownDecorator(this.player);
+            }
+        } else if (room.getDebuff()){
+            this.player.setImmunity(false);
+        }
         this.player.setCurrentRoom(room);
 
         if(room.getRoomName().equals("Troll"))
