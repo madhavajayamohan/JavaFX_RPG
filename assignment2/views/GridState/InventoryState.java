@@ -202,7 +202,7 @@ public class InventoryState extends GridStateWithItems
                 break;
         }
 
-//        scO.setStyle("-fx-background: "+ Backgcolor + " ; -fx-background-color:" + Backgcolor +" ;");
+        scO.setStyle("-fx-background: "+ Backgcolor + " ; -fx-background-color:" + Backgcolor +" ;");
         scO.setFitToWidth(true);
         scO.setFitToHeight(true);
         grid.add(scO,0,2, 1, 1);
@@ -210,6 +210,10 @@ public class InventoryState extends GridStateWithItems
         ColorAdjust bright = new ColorAdjust();
         bright.setBrightness(brightness);
         grid.setEffect(bright);
+
+        ColorAdjust contrastBright = new ColorAdjust();
+        contrastBright.setContrast(Contrast);
+        grid.setEffect(contrastBright);
     }
 
     /**

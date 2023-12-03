@@ -25,6 +25,13 @@ public abstract class GridState
 
     public static ColorAdjust highContrastEffect = new ColorAdjust();
 
+    public static boolean HighContrastMode = false;
+
+    public static double Contrast = 0.0;
+    public static double ContrastBrightness = 0.0;
+
+
+
 
 
     /**

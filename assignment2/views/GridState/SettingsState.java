@@ -149,7 +149,7 @@ public class SettingsState extends GridState {
         highContrastButton = new Button("Change Contrast");
         highContrastButton.setId("Contrast");
         highContrastButton.setFont(new Font("Arial", textSize));
-        highContrastButton.setStyle("-fx-background-color: red;");
+        highContrastButton.setStyle("-fx-background-color: white; -fx-text-fill: white");
         customizeButton(highContrastButton, 100, 50);
         AdventureGameView.makeButtonAccessible(highContrastButton, "High Contrast Change Toggle", "This button changes high contrast mode.", "This button changes high contrast mode.");
         addContrastEvent();
@@ -180,8 +180,12 @@ public class SettingsState extends GridState {
         textLabel.setFont(new Font("Arial", textSize));
         ColorAdjust bright = new ColorAdjust();
         bright.setBrightness(brightness);
+        ColorAdjust contrastBright = new ColorAdjust();
+        contrastBright.setContrast(Contrast);
         this.view.currGrid.setEffect(bright);
+        this.view.currGrid.setEffect(contrastBright);
         grid.setEffect(bright);
+        grid.setEffect(contrastBright);
 
         switch (Backgcolor) {
             case "Black":
@@ -291,29 +295,22 @@ public class SettingsState extends GridState {
     }
 
     private void toggleHighContrastMode() {
-        if (highContrastModeOn) {
+        if (HighContrastMode) {
             // If high contrast mode is on, turn it off
-            highContrastModeOn = false;
-            highContrastButton.setStyle("-fx-background-color: red;");
-            highContrastEffect.setContrast(0); // Reset contrast
-            highContrastEffect.setBrightness(0); // Reset brightness
-            highContrastEffect.setSaturation(0); // Reset saturation
-
+            HighContrastMode = false;
+            Contrast = 0.0;
+            updateScene("");
+            highContrastButton.setStyle("-fx-background-color: red; -fx-text-fill: white;");
         } else {
             // If high contrast mode is off, turn it on
-            highContrastModeOn = true;
-            highContrastButton.setStyle("-fx-background-color: green;");
-            highContrastEffect.setContrast(0.7); // Increase contrast
-            highContrastEffect.setBrightness(0.5); // Decrease brightness
-            highContrastEffect.setSaturation(0.0); // Increase saturation
+            HighContrastMode = true;
+            Contrast = 1.0;
+            updateScene("");
+            highContrastButton.setStyle("-fx-background-color: green; -fx-text-fill: white; ");
+
         }
 
-        // Apply the high contrast effect to the grid and other elements
-        applyHighContrastEffect();
-    }
 
-    private void applyHighContrastEffect() {
-        grid.setEffect(highContrastEffect);
     }
 
 }
