@@ -361,6 +361,12 @@ public class GameTrollState extends TrollState {
         ColorAdjust bright = new ColorAdjust();
         bright.setBrightness(brightness);
         grid.setEffect(bright);
+
+
+        ColorAdjust contrastBright = new ColorAdjust();
+        contrastBright.setContrast(Contrast);
+        grid.setEffect(contrastBright);
+
         this.view.stage.sizeToScene();
     }
 

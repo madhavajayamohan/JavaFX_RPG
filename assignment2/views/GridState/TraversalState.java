@@ -424,6 +424,11 @@ public class TraversalState extends GridStateWithItems
         grid.setEffect(bright);
         this.view.stage.sizeToScene();
 
+        ColorAdjust contrastBright = new ColorAdjust();
+        contrastBright.setContrast(Contrast);
+        grid.setEffect(contrastBright);
+//        this.view.currGrid.setEffect(bright);
+
         //finally, articulate the description
         if (textToDisplay == null || textToDisplay.isBlank()) view.articulateRoomDescription();
     }
