@@ -26,14 +26,4 @@ public class DefaultPlayer extends Player {
         this.lives = 3;
         this.immunity = false;
     }
-
-    public DefaultPlayer(Room currentRoom, ArrayList inventory, ArrayList powerInv, int lives, boolean immunity) {
-        this.inventory = inventory;
-        this.powerInv = powerInv;
-        this.currentRoom = currentRoom;
-        this.atkPower = 100;
-        this.defPower = 100;
-        this.lives = lives;
-        this.immunity = immunity;
-    }
 }

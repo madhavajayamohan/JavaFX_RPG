@@ -36,4 +36,8 @@ public class PlayerDecorator extends Player {
      * @return integer value for defPower
      */
     public int getDefensePower() { return defaultPlayer.getDefensePower(); }
+
+    public Player getDefaultPlayer() {
+        return defaultPlayer;
+    }
 }

@@ -1,9 +1,6 @@
 package AdventureModel;
 
-import AdventureModel.Players.Decorators.BuffDecorator;
-import AdventureModel.Players.Decorators.DebuffDecorator;
-import AdventureModel.Players.Decorators.DefenseDownDecorator;
-import AdventureModel.Players.Decorators.DefenseUpDecorator;
+import AdventureModel.Players.Decorators.*;
 import AdventureModel.Players.DefaultPlayer;
 import AdventureModel.Players.Player;
 
@@ -237,6 +234,7 @@ public class AdventureGame implements Serializable {
                     } else if (inputArray[1].contains("DEFENSE")) {
                         playerChange(1, this.player);
                     }
+                    return "YOU HAVE USED: \n " + inputArray[1];
                 } else {
                     return "THIS OBJECT IS NOT IN YOUR INVENTORY:\n " + inputArray[1];
                 }
@@ -310,22 +308,22 @@ public class AdventureGame implements Serializable {
     }
 
     public void playerChange(int type, Player player) {
-        Player temp = new DefaultPlayer(player.getCurrentRoom(), player.getInventory(), player.getPowerInventory(), player.getLives(), player.getImmunity());
+        if (this.player instanceof PlayerDecorator) {
+            this.player = ((PlayerDecorator) this.player).getDefaultPlayer();
+        }
         switch (type) {
             case 0:
-                this.player = new BuffDecorator(temp);
+                this.player = new BuffDecorator(this.player);
                 break;
             case 1:
-                this.player = new DefenseUpDecorator(temp);
+                this.player = new DefenseUpDecorator(this.player);
                 break;
             case 2:
-                this.player = new DebuffDecorator(temp);
+                this.player = new DebuffDecorator(this.player);
                 break;
             case 3:
-                this.player = new DefenseDownDecorator(temp);
+                this.player = new DefenseDownDecorator(this.player);
                 break;
-            case 4:
-                this.player = temp;
         }
     }
 }
