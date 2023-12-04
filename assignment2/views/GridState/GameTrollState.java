@@ -75,6 +75,7 @@ public class GameTrollState extends TrollState {
 
     String[] commandList = new String[2];
 
+    VBox textEntry = new VBox();
 
     public GameTrollState(String name, AdventureGameView view, Player player)
     {
@@ -227,7 +228,6 @@ public class GameTrollState extends TrollState {
         addTextHandlingEvent(); //attach an event to this input field
 
         // adding the text area and submit button to a VBox
-        VBox textEntry = new VBox();
         textEntry.setStyle("-fx-background-color: #000000;");
         textEntry.setPadding(new Insets(20, 20, 20, 20));
         textEntry.getChildren().addAll(commandLabel, inputTextField);
@@ -356,6 +356,61 @@ public class GameTrollState extends TrollState {
         ScrollPane toScroll = new ScrollPane(mainText);
         toScroll.setStyle("-fx-background: rgb(0,0,0)");
         grid.add(toScroll, 1, 1, 1,1);
+        switch (Backgcolor) {
+            case "Black":
+                grid.setBackground(new Background(new BackgroundFill(
+                        Color.BLACK,
+                        new CornerRadii(0),
+                        new Insets(0)
+                )));
+                commandLabel.setTextFill(Color.BLACK);
+                textEntry.setStyle("-fx-background-color: black;");
+                mainText.setStyle("-fx-background: black; -fx-background-color:black;");
+                toScroll.setStyle("-fx-background: black");
+
+                break;
+            case "Grey":
+                grid.setBackground(new Background(new BackgroundFill(
+                        Color.GREY,
+                        new CornerRadii(0),
+                        new Insets(0)
+                )));
+                commandLabel.setTextFill(Color.GREY);
+                textEntry.setStyle("-fx-background-color: grey;");
+                mainText.setStyle("-fx-background: grey; -fx-background-color:grey;");
+                toScroll.setStyle("-fx-background: grey");
+
+                break;
+            case "Pink":
+                grid.setBackground(new Background(new BackgroundFill(
+                        Color.PINK,
+                        new CornerRadii(0),
+                        new Insets(0)
+                )));
+                commandLabel.setTextFill(Color.PINK);
+                textEntry.setStyle("-fx-background-color: pink;");
+                mainText.setStyle("-fx-background: pink; -fx-background-color:pink;");
+                toScroll.setStyle("-fx-background: pink");
+
+                break;
+            case "Orange":
+                grid.setBackground(new Background(new BackgroundFill(
+                        Color.ORANGE,
+                        new CornerRadii(0),
+                        new Insets(0)
+                )));
+                commandLabel.setTextFill(Color.ORANGE);
+                textEntry.setStyle("-fx-background-color: orange;");
+                mainText.setStyle("-fx-background: orange; -fx-background-color:orange;");
+                toScroll.setStyle("-fx-background: orange");
+                break;
+            default:
+                // Handle unknown color
+                break;
+        }
+
+
+
 
         ColorAdjust bright = new ColorAdjust();
         bright.setBrightness(brightness);
