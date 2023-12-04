@@ -422,6 +422,7 @@ public class TraversalState extends GridStateWithItems
         objLabel.setFont(new Font("Arial", textSize));
         commandLabel.setFont(new Font("Arial", textSize));
 
+        grid.getChildren().removeIf(node -> GridPane.getColumnIndex(node) == 1 && GridPane.getRowIndex(node) == 1);
         grid.add(roomPane, 1, 1);
         ColorAdjust bright = new ColorAdjust();
         bright.setBrightness(brightness);

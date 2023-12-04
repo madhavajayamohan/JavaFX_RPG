@@ -23,7 +23,7 @@ public class SettingsState extends GridState {
     public Slider brightnessControl; //Slider to change brightness
     public ComboBox backgroundThemeChanger; //Combo box to change background color
 
-    public Button enlargeButton, minimizeButton, highContrastButton, exitButton;
+    public Button enlargeButton, minimizeButton, highContrastButton, exitButton, muteButton;
     //Button to enlarge text, minimize text, change into high contrast most, and go back to Traversal Screen
     public Label settingsLabel, brightnessLabel, backgroundLabel, textLabel, contrastLabel;
     public boolean highContrastModeOn = false;
@@ -75,6 +75,18 @@ public class SettingsState extends GridState {
         customizeButton(exitButton, 100, 50);
         AdventureGameView.makeButtonAccessible(exitButton, "Exit Button", "This button exits out of the Inventory.", "This button takes you from inetory back to main screen.");
         addExitEvent();
+
+        muteButton = new Button("Mute");
+        muteButton.setId("Mute");
+        muteButton.setFont(new Font("Arial", textSize));
+        customizeButton(muteButton, 100, 50);
+        AdventureGameView.makeButtonAccessible(muteButton, "Background Music Mute Button", "This button mutes background music.", "This button mutes background music.");
+        addMuteEvent();
+
+        HBox buttons = new HBox();
+        buttons.getChildren().addAll(exitButton, muteButton);
+        buttons.setSpacing(10);
+        buttons.setAlignment(Pos.CENTER);
 
         brightnessLabel = new Label("Brightness");
         brightnessLabel.setFont(new Font("Arial", textSize));
@@ -161,7 +173,7 @@ public class SettingsState extends GridState {
 
         //add all the widgets to the GridPane
         grid.add(settingsLabel, 0, 0, 1, 1);  // Add label
-        grid.add(exitButton, 1, 0, 1, 1);  // Add buttons
+        grid.add(buttons, 1, 0, 1, 1);  // Add buttons
 
         grid.add(textChange, 0, 1, 1, 1);
         grid.add(brightness, 1, 1, 1, 1);
@@ -184,6 +196,10 @@ public class SettingsState extends GridState {
         bright.setBrightness(brightness);
         bright.setContrast(Contrast);
         grid.setEffect(bright);
+        if (!mute)
+            this.view.backgroundMusic.adjustVolume(0.8);
+        else
+            this.view.backgroundMusic.adjustVolume(0.0);
 
         switch (Backgcolor) {
             case "Black":
@@ -227,7 +243,11 @@ public class SettingsState extends GridState {
     public void addExitEvent() {
         exitButton.setOnAction(e -> {
             grid.requestFocus();
-            this.view.changeState("Traversal");
+
+            if(this.view.inTrollGame)
+                this.view.changeState("Troll");
+            else
+                this.view.changeState("Traversal");
         });
     }
 
@@ -308,7 +328,14 @@ public class SettingsState extends GridState {
 
         }
 
+    }
 
+    public void addMuteEvent() {
+        muteButton.setOnAction(e -> {
+            grid.requestFocus();
+            this.mute = !this.mute;
+            updateScene("");
+        });
     }
 
 }

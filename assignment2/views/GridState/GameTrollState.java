@@ -39,7 +39,6 @@ public class GameTrollState extends TrollState {
     Label trollStatusLabel, playerStatusLabel, trollHPLabel, playerHPLabel, trollBaseAttack, playerBaseAttack, playerBaseDefense, playerLivesLabel, commandLabel;
     String trollSpeak = "You, puny human, dare to come on this path?\n" +
                         "These chambers are only meant for the strong– and no human is strong.\n" +
-                        "These chambers are only meant for the strong– and no human is strong.\n" +
                         "Oho? I see that you can use some magic. Very well, then.\n" +
                         "Let us see how your magic matches up to my strength.\n\n" +
                         "LET US DO BATTLE!!!!\n\n" +
@@ -433,6 +432,12 @@ public class GameTrollState extends TrollState {
     @Override
     public boolean playGame() {
         if(trollHP <= 0) {
+            this.trollHP = 0;
+
+            if(this.playerHP <= 0) {
+                this.playerHP = 1;
+            }
+
             updateScene("YOU HAVE WON!!!!");
             mainText.setFont(new Font("Arial", 70));
 
@@ -445,6 +450,12 @@ public class GameTrollState extends TrollState {
             pause.play();
         }
         else if(playerHP <= 0) {
+            this.playerHP = 0;
+
+            if(this.trollHP <= 0) {
+                this.trollHP = 1;
+            }
+
             this.player.decreaseLives();
             updateScene("YOU HAVE LOST!!!!");
             mainText.setFont(new Font("Arial", 70));

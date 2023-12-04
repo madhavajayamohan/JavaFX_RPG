@@ -23,6 +23,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 
+import static views.GridState.GridState.mute;
+
 /**
  * Class AdventureGameView.
  *
@@ -47,14 +49,13 @@ public class AdventureGameView {
 
     private MediaPlayer mediaPlayer1; //to play audio
     private boolean mediaPlaying; //to know if the audio is playing
-    private BackgroundMusic backgroundMusic;
+    public BackgroundMusic backgroundMusic;
 
 
 
 
 
     String trollSpeak = "You, puny human, dare to come on this path?\n" +
-            "These chambers are only meant for the strong– and no human is strong.\n" +
             "These chambers are only meant for the strong– and no human is strong.\n" +
             "Oho? I see that you can use some magic. Very well, then.\n" +
             "Let us see how your magic matches up to my strength.\n\n" +
@@ -132,10 +133,16 @@ public class AdventureGameView {
     public void articulateRoomDescription() {
 
         if (!backgroundMusic.isMediaPlaying()) {
-            backgroundMusic.playBackgroundMusic();
+            if (!mute)
+                backgroundMusic.playBackgroundMusic();
+            else
+                backgroundMusic.adjustVolume(0.0);
         }
         else{
-            backgroundMusic.adjustVolume(0.1);
+            if (!mute)
+                backgroundMusic.adjustVolume(0.1);
+            else
+                backgroundMusic.adjustVolume(0.0);
         }
 
         String roomDescriptionFile;
@@ -146,14 +153,17 @@ public class AdventureGameView {
         else roomDescriptionFile = "./" + adventureName + "/sounds/" + roomName.toLowerCase() + "-short.mp3" ;
         roomDescriptionFile = roomDescriptionFile.replace(" ","-");
 
-        if(!roomName.equals("TROLL")) {
+        if(!roomName.equals("TROLL") && !roomName.equalsIgnoreCase("hidden room")) {
             System.out.println(roomName);
             Media sound = new Media(new File(roomDescriptionFile).toURI().toString());
 
             mediaPlayer1 = new MediaPlayer(sound);
             mediaPlayer1.play();
             mediaPlaying = true;
-            backgroundMusic.adjustVolume(0.1);
+            if (!mute)
+                backgroundMusic.adjustVolume(0.1);
+            else
+                backgroundMusic.adjustVolume(0.0);
         }
 
     }
@@ -165,7 +175,10 @@ public class AdventureGameView {
         if (mediaPlaying) {
             mediaPlayer1.stop(); //shush!
             mediaPlaying = false;
-            backgroundMusic.adjustVolume(0.8);
+            if (!mute)
+                backgroundMusic.adjustVolume(0.8);
+            else
+                backgroundMusic.adjustVolume(0.0);
         }
     }
 
@@ -175,6 +188,10 @@ public class AdventureGameView {
     public void updateScene(String textToDisplay)
     {
         currState.updateScene(textToDisplay);
+        if (!mute)
+            backgroundMusic.adjustVolume(0.8);
+        else
+            backgroundMusic.adjustVolume(0.0);
     }
 
     /**
