@@ -28,7 +28,7 @@ a bag of coins
 
 EMERALD
 an emerald the size of a plover's egg
-1
+39
 
 EGGS
 a nest of golden eggs
@@ -45,3 +45,19 @@ a small plant murmuring "Water, water"
 CHEST
 a pirate chest
 1
+
+IMMUNITYBUFF
+Gives immunity
+2
+
+ATTACKBUFF
+gives more strength
+3
+
+DEFENSEBUFF
+gives power
+4
+
+EXTRALIFE
+Life Generator
+6
