@@ -4,6 +4,7 @@ import AdventureModel.Players.Decorators.*;
 import AdventureModel.Players.DefaultPlayer;
 import AdventureModel.Players.Player;
 
+import java.awt.event.AdjustmentEvent;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -208,11 +209,17 @@ public class AdventureGame implements Serializable {
                 return "THE DROP COMMAND REQUIRES AN OBJECT";
             else if (inputArray[0].equals("TAKE") && inputArray.length == 2) {
                 if (this.player.getCurrentRoom().checkIfObjectInRoom(inputArray[1])) {
-                    if (!inputArray[1].contains("BUFF")) {
+                    if ((!inputArray[1].contains("BUFF") && !inputArray[1].contains("EXTRALIFE"))) {
                         this.player.takeObject(inputArray[1]);
                         return "YOU HAVE TAKEN:\n " + inputArray[1];
                     } else if (inputArray[1].equals("EXTRALIFE")) {
                         this.player.increaseLives();
+                        for (AdventureObject obj : this.player.getCurrentRoom().objectsInRoom) {
+                            if (obj.getName().equals("EXTRALIFE")) {
+                                this.player.getCurrentRoom().objectsInRoom.remove(obj);
+                                break;
+                            }
+                        }
                         return "YOU HAVE GAINED AN EXTRA LIFE";
                     } else {
                         this.player.takePowerUp(inputArray[1]);

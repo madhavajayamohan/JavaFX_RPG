@@ -341,6 +341,9 @@ public class GameTrollState extends TrollState {
         inputTextField.setFont(new Font("Arial", textSize));
         playerHPLabel.setText("Player HP: " + playerHP);
         trollHPLabel.setText("Troll HP: " + trollHP);
+
+        playerBaseAttack.setText("Player Base Attack: " + player.getAttackPower());
+        playerBaseDefense.setText("Player Base Defense: " + player.getDefensePower());
         playerLivesLabel.setText("Player Lives: " + player.getLives());
 
         mainText.setText(s);

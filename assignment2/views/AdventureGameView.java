@@ -91,7 +91,7 @@ public class AdventureGameView {
     public void intiUI() {
 
         // setting up the stage
-        this.stage.setTitle("tiowille's Adventure Game"); //Replace <YOUR UTORID> with your UtorID
+        this.stage.setTitle("Group 37's Adventure Game"); //Replace <YOUR UTORID> with your UtorID
 
 
         allStates[0] = new TraversalState("Traversal", this);
@@ -152,6 +152,7 @@ public class AdventureGameView {
         if (!this.model.getPlayer().getCurrentRoom().getVisited()) roomDescriptionFile = "./" + adventureName + "/sounds/" + roomName.toLowerCase() + "-long.mp3" ;
         else roomDescriptionFile = "./" + adventureName + "/sounds/" + roomName.toLowerCase() + "-short.mp3" ;
         roomDescriptionFile = roomDescriptionFile.replace(" ","-");
+
 
         if(!roomName.equals("TROLL") && !roomName.equalsIgnoreCase("hidden room")) {
             System.out.println(roomName);
@@ -225,9 +226,13 @@ public class AdventureGameView {
         currState = allStates[index];
         currGrid = currState.grid;
 
-        if(index == 3)
+        if(currState instanceof GameTrollState) {
+            if(!this.model.player.equals(((GameTrollState) currState).getPlayer())) {
+                ((GameTrollState) currState).changePlayer(this.model.player);
+            }
+
             updateScene(trollSpeak + instructionText + "\nAre you ready to play? (Enter B to start playing)");
-        else
+        } else
             updateScene("");
 
         updateItems();
