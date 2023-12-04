@@ -324,6 +324,8 @@ public class AdventureGame implements Serializable {
             case 3:
                 this.player = new DefenseDownDecorator(temp);
                 break;
+            case 4:
+                this.player = temp;
         }
     }
 }
