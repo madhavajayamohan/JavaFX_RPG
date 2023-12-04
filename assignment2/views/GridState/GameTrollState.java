@@ -357,15 +357,10 @@ public class GameTrollState extends TrollState {
         toScroll.setStyle("-fx-background: rgb(0,0,0)");
         grid.add(toScroll, 1, 1, 1,1);
 
-
         ColorAdjust bright = new ColorAdjust();
         bright.setBrightness(brightness);
+        bright.setContrast(Contrast);
         grid.setEffect(bright);
-
-
-        ColorAdjust contrastBright = new ColorAdjust();
-        contrastBright.setContrast(Contrast);
-        grid.setEffect(contrastBright);
 
         this.view.stage.sizeToScene();
     }

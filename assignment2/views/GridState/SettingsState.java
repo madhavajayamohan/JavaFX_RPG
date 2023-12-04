@@ -180,12 +180,8 @@ public class SettingsState extends GridState {
         textLabel.setFont(new Font("Arial", textSize));
         ColorAdjust bright = new ColorAdjust();
         bright.setBrightness(brightness);
-        ColorAdjust contrastBright = new ColorAdjust();
-        contrastBright.setContrast(Contrast);
-        this.view.currGrid.setEffect(bright);
-        this.view.currGrid.setEffect(contrastBright);
+        bright.setContrast(Contrast);
         grid.setEffect(bright);
-        grid.setEffect(contrastBright);
 
         switch (Backgcolor) {
             case "Black":

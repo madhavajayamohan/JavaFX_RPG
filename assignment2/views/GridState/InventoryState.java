@@ -209,11 +209,8 @@ public class InventoryState extends GridStateWithItems
 
         ColorAdjust bright = new ColorAdjust();
         bright.setBrightness(brightness);
+        bright.setContrast(Contrast);
         grid.setEffect(bright);
-
-        ColorAdjust contrastBright = new ColorAdjust();
-        contrastBright.setContrast(Contrast);
-        grid.setEffect(contrastBright);
     }
 
     /**
@@ -247,6 +244,7 @@ public class InventoryState extends GridStateWithItems
 
         ColorAdjust bright = new ColorAdjust();
         bright.setBrightness(brightness);
+        bright.setContrast(Contrast);
         grid.setEffect(bright);
     }
 
