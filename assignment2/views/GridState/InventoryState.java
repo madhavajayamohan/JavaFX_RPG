@@ -14,6 +14,7 @@ import views.AdventureGameView;
 import views.GridState.GridState;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Class InventoryState. The class models the Inventory Screen in the game.
@@ -22,7 +23,7 @@ public class InventoryState extends GridStateWithItems
 {
     VBox objectsInInventory = new VBox(); //to hold inventory items
     VBox powerUps = new VBox(); //to hold accrued power-ups
-    VBox achievements; //to hold any achievements
+    VBox achievements = new VBox(); //to hold any achievements
 
     Button exitButton; //button to return back to Traversal Screen
 
@@ -238,10 +239,27 @@ public class InventoryState extends GridStateWithItems
         ScrollPane scO = new ScrollPane(powerUps);
         scO.setPadding(new Insets(10));
         scO.setStyle("-fx-background: #000000; -fx-background-color:transparent;");
+        switch (Backgcolor) {
+            case "Black":
+                scO.setStyle("-fx-background: black; -fx-background-color:black;");
+                break;
+            case "Grey":
+                scO.setStyle("-fx-background: grey; -fx-background-color:grey;");
+                break;
+            case "Pink":
+                scO.setStyle("-fx-background: pink; -fx-background-color:pink;");
+                break;
+            case "Orange":
+                scO.setStyle("-fx-background: orange; -fx-background-color:orange;");
+                break;
+            default:
+                // Handle unknown color
+                break;
+        }
+
         scO.setFitToWidth(true);
         scO.setFitToHeight(true);
         grid.add(scO,1,2, 1, 1);
-
         ColorAdjust bright = new ColorAdjust();
         bright.setBrightness(brightness);
         bright.setContrast(Contrast);
@@ -252,8 +270,52 @@ public class InventoryState extends GridStateWithItems
      * Updates Acehievements
      */
     public void updateAchievements()
-    {
-        // To be implemented
+    {   achievements.getChildren().clear();
+        boolean hasSpecialItem = false;
+        // Check if the player has the special item (e.g., Emerald) in their inventory
+        for (String itemName : this.view.model.player.getInventory()) {
+            if (Objects.equals(itemName, "EMERALD")) {
+                hasSpecialItem = true;
+                break;
+            }
+        }
+            if (hasSpecialItem) {
+                Label achievementText = new Label("Defeated Troll");
+                achievementText.setStyle("-fx-background-color:green;");
+                achievementText.setAlignment(Pos.CENTER);
+                achievementText.setStyle("-fx-text-fill: white;");
+                achievementText.setFont(new Font("Arial", textSize));
+                achievementText.setWrapText(true);
+                achievements.getChildren().add(achievementText);
+            }
+        ScrollPane scO = new ScrollPane(achievements);
+        scO.setPadding(new Insets(10));
+        scO.setStyle("-fx-background: #000000; -fx-background-color:transparent;");
+        switch (Backgcolor) {
+            case "Black":
+                scO.setStyle("-fx-background: black; -fx-background-color:black;");
+                break;
+            case "Grey":
+                scO.setStyle("-fx-background: grey; -fx-background-color:grey;");
+                break;
+            case "Pink":
+                scO.setStyle("-fx-background: pink; -fx-background-color:pink;");
+                break;
+            case "Orange":
+                scO.setStyle("-fx-background: orange; -fx-background-color:orange;");
+                break;
+            default:
+                // Handle unknown color
+                break;
+        }
+        scO.setFitToWidth(true);
+        scO.setFitToHeight(true);
+        grid.add(scO,2,2, 1, 1);
+        ColorAdjust bright = new ColorAdjust();
+        bright.setBrightness(brightness);
+        bright.setContrast(Contrast);
+        grid.setEffect(bright);
+
     }
 
     /**

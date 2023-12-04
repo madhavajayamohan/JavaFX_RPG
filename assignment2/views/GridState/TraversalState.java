@@ -369,6 +369,7 @@ public class TraversalState extends GridStateWithItems
                         new CornerRadii(0),
                         new Insets(0)
                 )));
+                toScroll.setStyle("-fx-background: black; -fx-background-color:black;");
                 objLabel.setTextFill(Color.BLACK);
                 textEntry.setStyle("-fx-background-color: black;");
                 roomPane.setStyle("-fx-background-color: black;");
@@ -381,6 +382,7 @@ public class TraversalState extends GridStateWithItems
                         new CornerRadii(0),
                         new Insets(0)
                 )));
+                toScroll.setStyle("-fx-background: grey;-fx-background-color:white;");
                 objLabel.setTextFill(Color.GREY);
                 textEntry.setStyle("-fx-background-color: grey;");
                 roomPane.setStyle("-fx-background-color: grey;");
@@ -393,6 +395,7 @@ public class TraversalState extends GridStateWithItems
                         new CornerRadii(0),
                         new Insets(0)
                 )));
+                toScroll.setStyle("-fx-background: pink; -fx-background-color:white;");
                 objLabel.setTextFill(Color.PINK);
                 textEntry.setStyle("-fx-background-color: pink;");
                 roomPane.setStyle("-fx-background-color: pink;");
@@ -405,6 +408,7 @@ public class TraversalState extends GridStateWithItems
                         new CornerRadii(0),
                         new Insets(0)
                 )));
+                toScroll.setStyle("-fx-background: orange; -fx-background-color:white;");
                 objLabel.setTextFill(Color.ORANGE);
                 textEntry.setStyle("-fx-background-color: orange;");
                 roomPane.setStyle("-fx-background-color: orange;");
