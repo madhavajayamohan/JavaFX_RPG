@@ -81,6 +81,7 @@ public class SettingsState extends GridState {
         muteButton.setFont(new Font("Arial", textSize));
         customizeButton(muteButton, 100, 50);
         AdventureGameView.makeButtonAccessible(muteButton, "Background Music Mute Button", "This button mutes background music.", "This button mutes background music.");
+        muteButton.setStyle("-fx-background-color: green; -fx-text-fill: white;");
         addMuteEvent();
 
         HBox buttons = new HBox();
@@ -333,8 +334,17 @@ public class SettingsState extends GridState {
     public void addMuteEvent() {
         muteButton.setOnAction(e -> {
             grid.requestFocus();
-            this.mute = !this.mute;
+            if(this.mute) {
+                this.mute = !this.mute;
+                muteButton.setStyle("-fx-background-color: green; -fx-text-fill: white;");
+            }
+            else {
+                this.mute = !this.mute;
+                muteButton.setStyle("-fx-background-color: red; -fx-text-fill: white;");
+            }
+
             updateScene("");
+
         });
     }
 
