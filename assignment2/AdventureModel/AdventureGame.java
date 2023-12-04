@@ -18,8 +18,8 @@ public class AdventureGame implements Serializable {
     private final String directoryName; //An attribute to store the Introductory text of the game.
     private String helpText; //A variable to store the Help text of the game. This text is displayed when the user types "HELP" command.
     private final HashMap<Integer, Room> rooms; //A list of all the rooms in the game.
-    private HashMap<String,String> synonyms = new HashMap<>(); //A HashMap to store synonyms of commands.
-    private final String[] actionVerbs = {"QUIT","INVENTORY","TAKE","DROP"}; //List of action verbs (other than motions) that exist in all games. Motion vary depending on the room and game.
+    private HashMap<String, String> synonyms = new HashMap<>(); //A HashMap to store synonyms of commands.
+    private final String[] actionVerbs = {"QUIT", "INVENTORY", "TAKE", "DROP"}; //List of action verbs (other than motions) that exist in all games. Motion vary depending on the room and game.
     public Player player; //The Player of the game.
 
     /**
@@ -29,7 +29,7 @@ public class AdventureGame implements Serializable {
      *
      * @param name the name of the adventure
      */
-    public AdventureGame(String name){
+    public AdventureGame(String name) {
         this.synonyms = new HashMap<>();
         this.rooms = new HashMap<>();
         this.directoryName = "Games/" + name; //all games files are in the Games directory!
@@ -42,7 +42,7 @@ public class AdventureGame implements Serializable {
 
     /**
      * Save the current state of the game to a file
-     * 
+     *
      * @param file pointer to file to write to
      */
     public void saveModel(File file) {
@@ -78,14 +78,14 @@ public class AdventureGame implements Serializable {
      * @param input string from the command line
      * @return a string array of tokens that represents the command.
      */
-    public String[] tokenize(String input){
+    public String[] tokenize(String input) {
 
         input = input.toUpperCase();
         String[] commandArray = input.split(" ");
 
         int i = 0;
         while (i < commandArray.length) {
-            if(this.synonyms.containsKey(commandArray[i])){
+            if (this.synonyms.containsKey(commandArray[i])) {
                 commandArray[i] = this.synonyms.get(commandArray[i]);
             }
             i++;
@@ -129,7 +129,9 @@ public class AdventureGame implements Serializable {
                     chosen = entry; //we can make it through, given our stuff
                     break;
                 }
-            } else { chosen = entry; } //the passage is unlocked
+            } else {
+                chosen = entry;
+            } //the passage is unlocked
         }
 
         if (chosen == null) return 1; //doh, we just can't move.
@@ -138,19 +140,19 @@ public class AdventureGame implements Serializable {
         Room room = this.rooms.get(roomNumber);
         if (room.getDebuff() && !this.player.getImmunity()) {
             if (room.getRoomNumber() % 2 == 0) {
-                this.player = new DebuffDecorator(this.player);
+                playerChange(2, this.player);
             } else {
-                this.player = new DefenseDownDecorator(this.player);
+                playerChange(3, this.player);
             }
-        } else if (room.getDebuff()){
+        } else if (room.getDebuff()) {
             this.player.setImmunity(false);
         }
         this.player.setCurrentRoom(room);
 
-        if(room.getRoomName().equals("Troll"))
+        if (room.getRoomName().equals("Troll"))
             return 2;
 
-        if(!this.player.getCurrentRoom().getMotionTable().getDirection().get(0).getDirection().equals("FORCED"))
+        if (!this.player.getCurrentRoom().getMotionTable().getDirection().get(0).getDirection().equals("FORCED"))
             return 1;
 
         return 0;
@@ -163,7 +165,7 @@ public class AdventureGame implements Serializable {
      *
      * @param command String representation of the command.
      */
-    public String interpretAction(String command){
+    public String interpretAction(String command) {
 
         String[] inputArray = tokenize(command); //look up synonyms
 
@@ -177,12 +179,12 @@ public class AdventureGame implements Serializable {
                     return "GAME OVER";
                 else return "FORCED";
             } //something is up here! We are dead or we won.
-            else if(movePlayerResult == 2) {
+            else if (movePlayerResult == 2) {
                 return "TROLL";
             }
             return null;
-        } else if(Arrays.asList(this.actionVerbs).contains(inputArray[0])) {
-            if(inputArray[0].equals("QUIT")) {
+        } else if (Arrays.asList(this.actionVerbs).contains(inputArray[0])) {
+            if (inputArray[0].equals("QUIT")) {
                 String gameName = "Autosave " + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + ".ser";
                 String separator = File.separator;
                 File save = new File("Games" + separator + "AutoSaves" + separator + gameName);
@@ -199,16 +201,20 @@ public class AdventureGame implements Serializable {
                 }
                 return "QUIT";
             } //time to stop!
-            else if(inputArray[0].equals("INVENTORY") && this.player.getInventory().size() == 0) return "INVENTORY IS EMPTY";
-            else if(inputArray[0].equals("INVENTORY") && this.player.getInventory().size() > 0) return "THESE OBJECTS ARE IN YOUR INVENTORY:\n" + this.player.getInventory().toString();
-            else if(inputArray[0].equals("TAKE") && inputArray.length < 2) return "THE TAKE COMMAND REQUIRES AN OBJECT";
-            else if(inputArray[0].equals("DROP") && inputArray.length < 2) return "THE DROP COMMAND REQUIRES AN OBJECT";
-            else if(inputArray[0].equals("TAKE") && inputArray.length == 2) {
-                if(this.player.getCurrentRoom().checkIfObjectInRoom(inputArray[1])) {
+            else if (inputArray[0].equals("INVENTORY") && this.player.getInventory().size() == 0)
+                return "INVENTORY IS EMPTY";
+            else if (inputArray[0].equals("INVENTORY") && this.player.getInventory().size() > 0)
+                return "THESE OBJECTS ARE IN YOUR INVENTORY:\n" + this.player.getInventory().toString();
+            else if (inputArray[0].equals("TAKE") && inputArray.length < 2)
+                return "THE TAKE COMMAND REQUIRES AN OBJECT";
+            else if (inputArray[0].equals("DROP") && inputArray.length < 2)
+                return "THE DROP COMMAND REQUIRES AN OBJECT";
+            else if (inputArray[0].equals("TAKE") && inputArray.length == 2) {
+                if (this.player.getCurrentRoom().checkIfObjectInRoom(inputArray[1])) {
                     if (!inputArray[1].contains("BUFF")) {
                         this.player.takeObject(inputArray[1]);
                         return "YOU HAVE TAKEN:\n " + inputArray[1];
-                    } else if (inputArray[1].equals("EXTRALIFE")){
+                    } else if (inputArray[1].equals("EXTRALIFE")) {
                         this.player.increaseLives();
                         return "YOU HAVE GAINED AN EXTRA LIFE";
                     } else {
@@ -218,21 +224,20 @@ public class AdventureGame implements Serializable {
                 } else {
                     return "THIS OBJECT IS NOT HERE:\n " + inputArray[1];
                 }
-            }
-            else if(inputArray[0].equals("DROP") && inputArray.length == 2) {
-                if(this.player.checkIfObjectInInventory(inputArray[1])) {
+            } else if (inputArray[0].equals("DROP") && inputArray.length == 2) {
+                if (this.player.checkIfObjectInInventory(inputArray[1])) {
                     this.player.dropObject(inputArray[1]);
                     return "YOU HAVE DROPPED:\n " + inputArray[1];
-                } else if (this.player.checkIfObjectInPowerInventory(inputArray[1])){       //Add use = drop in synonyms.txt
+                } else if (this.player.checkIfObjectInPowerInventory(inputArray[1])) {       //Add use = drop in synonyms.txt
                     this.player.dropPowerUp(inputArray[1]);
                     if (inputArray[1].contains("IMMUNITY")) {
                         this.player.setImmunity(true);
                     } else if (inputArray[1].contains("ATTACK")) {
-                        this.player = new BuffDecorator(this.player);
+                        playerChange(0, this.player);
                     } else if (inputArray[1].contains("DEFENSE")) {
-                        this.player = new DefenseUpDecorator(this.player);
+                        playerChange(1, this.player);
                     }
-                }else {
+                } else {
                     return "THIS OBJECT IS NOT IN YOUR INVENTORY:\n " + inputArray[1];
                 }
             }
@@ -243,7 +248,8 @@ public class AdventureGame implements Serializable {
     /**
      * getDirectoryName
      * __________________________
-     * Getter method for directory 
+     * Getter method for directory
+     *
      * @return directoryName
      */
     public String getDirectoryName() {
@@ -253,7 +259,8 @@ public class AdventureGame implements Serializable {
     /**
      * getInstructions
      * __________________________
-     * Getter method for instructions 
+     * Getter method for instructions
+     *
      * @return helpText
      */
     public String getInstructions() {
@@ -263,7 +270,7 @@ public class AdventureGame implements Serializable {
     /**
      * getPlayer
      * __________________________
-     * Getter method for Player 
+     * Getter method for Player
      */
     public Player getPlayer() {
         return this.player;
@@ -272,7 +279,8 @@ public class AdventureGame implements Serializable {
     /**
      * getRooms
      * __________________________
-     * Getter method for rooms 
+     * Getter method for rooms
+     *
      * @return map of key value pairs (integer to room)
      */
     public HashMap<Integer, Room> getRooms() {
@@ -282,7 +290,8 @@ public class AdventureGame implements Serializable {
     /**
      * getSynonyms
      * __________________________
-     * Getter method for synonyms 
+     * Getter method for synonyms
+     *
      * @return map of key value pairs (synonym to command)
      */
     public HashMap<String, String> getSynonyms() {
@@ -293,11 +302,28 @@ public class AdventureGame implements Serializable {
      * setHelpText
      * __________________________
      * Setter method for helpText
+     *
      * @param help which is text to set
      */
     public void setHelpText(String help) {
         this.helpText = help;
     }
 
-
+    public void playerChange(int type, Player player) {
+        Player temp = new DefaultPlayer(player.getCurrentRoom(), player.getInventory(), player.getPowerInventory(), player.getLives(), player.getImmunity());
+        switch (type) {
+            case 0:
+                this.player = new BuffDecorator(temp);
+                break;
+            case 1:
+                this.player = new DefenseUpDecorator(temp);
+                break;
+            case 2:
+                this.player = new DebuffDecorator(temp);
+                break;
+            case 3:
+                this.player = new DefenseDownDecorator(temp);
+                break;
+        }
+    }
 }

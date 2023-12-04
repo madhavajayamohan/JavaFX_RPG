@@ -150,7 +150,7 @@ public class SettingsState extends GridState {
         highContrastButton.setId("Contrast");
         highContrastButton.setFont(new Font("Arial", textSize));
         highContrastButton.setStyle("-fx-background-color: white; -fx-text-fill: white");
-        customizeButton(highContrastButton, 100, 50);
+        customizeButton(highContrastButton, 200, 50);
         AdventureGameView.makeButtonAccessible(highContrastButton, "High Contrast Change Toggle", "This button changes high contrast mode.", "This button changes high contrast mode.");
         addContrastEvent();
 
@@ -169,6 +169,8 @@ public class SettingsState extends GridState {
         grid.add(highContrast, 1, 2, 1, 1);
 
         updateScene("");
+
+        highContrastButton.setStyle("-fx-background-color: red; -fx-text-fill: white;");
     }
 
     @Override
@@ -302,7 +304,7 @@ public class SettingsState extends GridState {
             HighContrastMode = true;
             Contrast = 1.0;
             updateScene("");
-            highContrastButton.setStyle("-fx-background-color: green; -fx-text-fill: white; ");
+            highContrastButton.setStyle("-fx-background-color: green; -fx-text-fill: white;");
 
         }
 
