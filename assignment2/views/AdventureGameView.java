@@ -154,7 +154,7 @@ public class AdventureGameView {
         roomDescriptionFile = roomDescriptionFile.replace(" ","-");
 
 
-        if(!roomName.equals("TROLL") && !roomName.equalsIgnoreCase("hidden room")) {
+        if(!roomName.equalsIgnoreCase("TROLL") && !roomName.equalsIgnoreCase("hidden room")) {
             System.out.println(roomName);
             Media sound = new Media(new File(roomDescriptionFile).toURI().toString());
 

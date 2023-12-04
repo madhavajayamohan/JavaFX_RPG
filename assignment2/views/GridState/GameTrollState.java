@@ -33,7 +33,7 @@ import static javafx.scene.paint.Paint.valueOf;
 
 public class GameTrollState extends TrollState {
 
-    Button saveButton, loadButton, replayButton, settingsButton; //buttons
+    Button settingsButton; //buttons
     Boolean helpToggle = false; //is help on display?
 
     Label trollStatusLabel, playerStatusLabel, trollHPLabel, playerHPLabel, trollBaseAttack, playerBaseAttack, playerBaseDefense, playerLivesLabel, commandLabel;
@@ -113,26 +113,6 @@ public class GameTrollState extends TrollState {
         grid.getRowConstraints().addAll( row1 , row2 , row3 );
 
         // Top Buttons
-        saveButton = new Button("Save");
-        saveButton.setId("Save");
-        saveButton.setFont(new Font("Arial", textSize));
-        customizeButton(saveButton, 100, 50);
-        AdventureGameView.makeButtonAccessible(saveButton, "Save Button", "This button saves the game.", "This button saves the game. Click it in order to save your current progress, so you can play more later.");
-        addSaveEvent();
-
-        loadButton = new Button("Load");
-        loadButton.setId("Load");
-        loadButton.setFont(new Font("Arial", textSize));
-        customizeButton(loadButton, 100, 50);
-        AdventureGameView.makeButtonAccessible(loadButton, "Load Button", "This button loads a game from a file.", "This button loads the game from a file. Click it in order to load a game that you saved at a prior date.");
-        addLoadEvent();
-
-        replayButton = new Button("Replay");
-        replayButton.setId("Replay");
-        replayButton.setFont(new Font("Arial", textSize));
-        customizeButton(replayButton, 100, 50);
-        AdventureGameView.makeButtonAccessible(loadButton, "Replay Button", "This button replays audio.", "This button replays the room description audio.");
-        addReplayEvent();
 
         settingsButton = new Button("Settings");
         settingsButton.setId("Settings");
@@ -142,7 +122,7 @@ public class GameTrollState extends TrollState {
         addSettingsEvent();
 
         HBox topButtons = new HBox();
-        topButtons.getChildren().addAll(saveButton, loadButton, replayButton, settingsButton);
+        topButtons.getChildren().addAll(settingsButton);
         topButtons.setSpacing(10);
         topButtons.setAlignment(Pos.CENTER);
 
@@ -555,39 +535,6 @@ public class GameTrollState extends TrollState {
         newText += "Enter your next move: ";
         updateScene(newText);
         turnCounter += 1;
-    }
-
-    /**
-     * This method handles the event related to the
-     * save button.
-     */
-    public void addSaveEvent() {
-        saveButton.setOnAction(e -> {
-            grid.requestFocus();
-            SaveView saveView = new SaveView(this.view);
-        });
-    }
-
-    /**
-     * This method handles the event related to the
-     * load button.
-     */
-    public void addLoadEvent() {
-        loadButton.setOnAction(e -> {
-            grid.requestFocus();
-            LoadView loadView = new LoadView(this.view);
-        });
-    }
-
-    /**
-     * This method handles the event related to the
-     * replay button.
-     */
-    public void addReplayEvent() {
-        replayButton.setOnAction(e -> {
-            grid.requestFocus();
-            // Needs to be implemented
-        });
     }
 
     /**

@@ -1,5 +1,10 @@
 package views;
 
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import views.GridState.GridState;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,6 +19,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -78,7 +84,15 @@ public class SaveView {
 
         ColorAdjust bright = new ColorAdjust();
         bright.setBrightness(GridState.brightness);
+        bright.setContrast(GridState.Contrast);
         dialogVbox.setEffect(bright);
+        Color color = Color.web(GridState.Backgcolor);
+        dialogVbox.setBackground(new Background(new BackgroundFill(
+                color,
+                new CornerRadii(0),
+                new Insets(0))));
+        dialogVbox.setStyle("-fx-background: "+ GridState.Backgcolor + " ; -fx-background-color:" + GridState.Backgcolor +" ;");
+
 
         VBox saveGameBox = new VBox(10, saveGameLabel, saveFileNameTextField, saveGameButton, saveFileErrorLabel, closeWindowButton);
         saveGameBox.setAlignment(Pos.CENTER);
