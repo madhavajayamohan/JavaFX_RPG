@@ -17,5 +17,7 @@ DROP <object>: this will drop an object in your inventory. Replace <object> with
 
 Some paths may be blocked.  To unblock a path you may need a specific object to be in your inventory.
 
+Press HINT to Get a hint of what you may or may not do.
+
 The game is over when your player reaches the VICTORY room, or when your player DIES.
 
