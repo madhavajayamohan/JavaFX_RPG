@@ -595,12 +595,29 @@ public class TraversalState extends GridStateWithItems
             help.setTextOverrun(OverrunStyle.CLIP);
             help.setWrapText(true);
             help.setStyle("-fx-text-fill: white;");
-            help.setFont(new Font("Arial", 16));
+            help.setFont(new Font("Arial", textSize));
             help.setAlignment(Pos.CENTER);
             VBox helpPane = new VBox(help);
             helpPane.setPadding(new Insets(10));
             helpPane.setAlignment(Pos.TOP_CENTER);
-            helpPane.setStyle("-fx-background-color: #000000;");
+            //helpPane.setStyle("-fx-background-color: #000000;");
+            switch (Backgcolor) {
+                case "Black":
+                    helpPane.setStyle("-fx-background: black; -fx-background-color:black;");
+                    break;
+                case "Grey":
+                    helpPane.setStyle("-fx-background: grey; -fx-background-color:grey;");
+                    break;
+                case "Pink":
+                    helpPane.setStyle("-fx-background: pink; -fx-background-color:pink;");
+                    break;
+                case "Orange":
+                    helpPane.setStyle("-fx-background: orange; -fx-background-color:orange;");
+                    break;
+                default:
+                    // Handle unknown color
+                    break;
+            }
             grid.add(helpPane, 1, 1);
             helpToggle = true;
         }
