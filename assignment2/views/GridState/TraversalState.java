@@ -265,7 +265,7 @@ public class TraversalState extends GridStateWithItems
         //try to move!
         String output = this.view.model.interpretAction(text); //process the command!
 
-        if (output == null || (!output.equals("GAME OVER") && !output.equals("FORCED") && !output.equals("HELP") && !output.equals("TROLL"))) {
+        if (output == null || (!output.equals("GAME OVER") && !output.equals("POISONED") && !output.equals("IMMUNE") && !output.equals("FORCED") && !output.equals("HELP") && !output.equals("TROLL"))) {
             updateScene(output);
             updateItems();
             for (Node x : grid.getChildren()) {
@@ -314,8 +314,24 @@ public class TraversalState extends GridStateWithItems
                 submitEvent("FORCED");
             });
             pause.play();
+        } else if (output.equals("POISONED")) {
+            updateScene("You have been POISONED!");
+            PauseTransition pause = new PauseTransition(Duration.seconds(2));
+            pause.setOnFinished(event -> {
+                updateScene("");
+            });
+            pause.play();
+        } else if (output.equals("IMMUNE")) {
+            System.out.println("IMMUNETEST");
+            updateScene("You are IMMUNE! Posion takes no effect!");
+            PauseTransition pause = new PauseTransition(Duration.seconds(2));
+            pause.setOnFinished(event -> {
+                updateScene("");
+            });
+            pause.play();
         }
     }
+
 
     /**
      * showCommands
@@ -369,6 +385,7 @@ public class TraversalState extends GridStateWithItems
                         new CornerRadii(0),
                         new Insets(0)
                 )));
+                toScroll.setStyle("-fx-background: black; -fx-background-color:black;");
                 objLabel.setTextFill(Color.BLACK);
                 textEntry.setStyle("-fx-background-color: black;");
                 roomPane.setStyle("-fx-background-color: black;");
@@ -381,6 +398,7 @@ public class TraversalState extends GridStateWithItems
                         new CornerRadii(0),
                         new Insets(0)
                 )));
+                toScroll.setStyle("-fx-background: grey;-fx-background-color:white;");
                 objLabel.setTextFill(Color.GREY);
                 textEntry.setStyle("-fx-background-color: grey;");
                 roomPane.setStyle("-fx-background-color: grey;");
@@ -393,6 +411,7 @@ public class TraversalState extends GridStateWithItems
                         new CornerRadii(0),
                         new Insets(0)
                 )));
+                toScroll.setStyle("-fx-background: pink; -fx-background-color:white;");
                 objLabel.setTextFill(Color.PINK);
                 textEntry.setStyle("-fx-background-color: pink;");
                 roomPane.setStyle("-fx-background-color: pink;");
@@ -405,6 +424,7 @@ public class TraversalState extends GridStateWithItems
                         new CornerRadii(0),
                         new Insets(0)
                 )));
+                toScroll.setStyle("-fx-background: orange; -fx-background-color:white;");
                 objLabel.setTextFill(Color.ORANGE);
                 textEntry.setStyle("-fx-background-color: orange;");
                 roomPane.setStyle("-fx-background-color: orange;");
@@ -418,11 +438,15 @@ public class TraversalState extends GridStateWithItems
         objLabel.setFont(new Font("Arial", textSize));
         commandLabel.setFont(new Font("Arial", textSize));
 
+        grid.getChildren().removeIf(node -> GridPane.getColumnIndex(node) == 1 && GridPane.getRowIndex(node) == 1);
         grid.add(roomPane, 1, 1);
         ColorAdjust bright = new ColorAdjust();
         bright.setBrightness(brightness);
+        bright.setContrast(Contrast);
         grid.setEffect(bright);
         this.view.stage.sizeToScene();
+
+
 
         //finally, articulate the description
         if (textToDisplay == null || textToDisplay.isBlank()) view.articulateRoomDescription();
@@ -571,12 +595,29 @@ public class TraversalState extends GridStateWithItems
             help.setTextOverrun(OverrunStyle.CLIP);
             help.setWrapText(true);
             help.setStyle("-fx-text-fill: white;");
-            help.setFont(new Font("Arial", 16));
+            help.setFont(new Font("Arial", textSize));
             help.setAlignment(Pos.CENTER);
             VBox helpPane = new VBox(help);
             helpPane.setPadding(new Insets(10));
             helpPane.setAlignment(Pos.TOP_CENTER);
-            helpPane.setStyle("-fx-background-color: #000000;");
+            //helpPane.setStyle("-fx-background-color: #000000;");
+            switch (Backgcolor) {
+                case "Black":
+                    helpPane.setStyle("-fx-background: black; -fx-background-color:black;");
+                    break;
+                case "Grey":
+                    helpPane.setStyle("-fx-background: grey; -fx-background-color:grey;");
+                    break;
+                case "Pink":
+                    helpPane.setStyle("-fx-background: pink; -fx-background-color:pink;");
+                    break;
+                case "Orange":
+                    helpPane.setStyle("-fx-background: orange; -fx-background-color:orange;");
+                    break;
+                default:
+                    // Handle unknown color
+                    break;
+            }
             grid.add(helpPane, 1, 1);
             helpToggle = true;
         }

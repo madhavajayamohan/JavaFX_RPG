@@ -2,6 +2,10 @@ package views;
 
 import AdventureModel.AdventureGame;
 import AdventureModel.AdventureLoader;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import views.GridState.GridState;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -68,7 +72,15 @@ public class LoadView {
 
         ColorAdjust bright = new ColorAdjust();
         bright.setBrightness(GridState.brightness);
+        bright.setContrast(GridState.Contrast);
         dialogVbox.setEffect(bright);
+
+        Color color = Color.web(GridState.Backgcolor);
+        dialogVbox.setBackground(new Background(new BackgroundFill(
+                color,
+                new CornerRadii(0),
+                new Insets(0))));
+        dialogVbox.setStyle("-fx-background: "+ GridState.Backgcolor + " ; -fx-background-color:" + GridState.Backgcolor +" ;");
 
         //on selection, do something
         selectGameButton.setOnAction(e -> {

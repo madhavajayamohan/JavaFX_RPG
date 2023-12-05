@@ -23,7 +23,7 @@ public class SettingsState extends GridState {
     public Slider brightnessControl; //Slider to change brightness
     public ComboBox backgroundThemeChanger; //Combo box to change background color
 
-    public Button enlargeButton, minimizeButton, highContrastButton, exitButton;
+    public Button enlargeButton, minimizeButton, highContrastButton, exitButton, muteButton;
     //Button to enlarge text, minimize text, change into high contrast most, and go back to Traversal Screen
     public Label settingsLabel, brightnessLabel, backgroundLabel, textLabel, contrastLabel;
     public boolean highContrastModeOn = false;
@@ -75,6 +75,19 @@ public class SettingsState extends GridState {
         customizeButton(exitButton, 100, 50);
         AdventureGameView.makeButtonAccessible(exitButton, "Exit Button", "This button exits out of the Inventory.", "This button takes you from inetory back to main screen.");
         addExitEvent();
+
+        muteButton = new Button("Mute");
+        muteButton.setId("Mute");
+        muteButton.setFont(new Font("Arial", textSize));
+        customizeButton(muteButton, 100, 50);
+        AdventureGameView.makeButtonAccessible(muteButton, "Background Music Mute Button", "This button mutes background music.", "This button mutes background music.");
+        muteButton.setStyle("-fx-background-color: green; -fx-text-fill: white;");
+        addMuteEvent();
+
+        HBox buttons = new HBox();
+        buttons.getChildren().addAll(exitButton, muteButton);
+        buttons.setSpacing(10);
+        buttons.setAlignment(Pos.CENTER);
 
         brightnessLabel = new Label("Brightness");
         brightnessLabel.setFont(new Font("Arial", textSize));
@@ -149,8 +162,8 @@ public class SettingsState extends GridState {
         highContrastButton = new Button("Change Contrast");
         highContrastButton.setId("Contrast");
         highContrastButton.setFont(new Font("Arial", textSize));
-        highContrastButton.setStyle("-fx-background-color: red;");
-        customizeButton(highContrastButton, 100, 50);
+        highContrastButton.setStyle("-fx-background-color: white; -fx-text-fill: white");
+        customizeButton(highContrastButton, 200, 50);
         AdventureGameView.makeButtonAccessible(highContrastButton, "High Contrast Change Toggle", "This button changes high contrast mode.", "This button changes high contrast mode.");
         addContrastEvent();
 
@@ -161,7 +174,7 @@ public class SettingsState extends GridState {
 
         //add all the widgets to the GridPane
         grid.add(settingsLabel, 0, 0, 1, 1);  // Add label
-        grid.add(exitButton, 1, 0, 1, 1);  // Add buttons
+        grid.add(buttons, 1, 0, 1, 1);  // Add buttons
 
         grid.add(textChange, 0, 1, 1, 1);
         grid.add(brightness, 1, 1, 1, 1);
@@ -169,6 +182,8 @@ public class SettingsState extends GridState {
         grid.add(highContrast, 1, 2, 1, 1);
 
         updateScene("");
+
+        highContrastButton.setStyle("-fx-background-color: red; -fx-text-fill: white;");
     }
 
     @Override
@@ -180,8 +195,12 @@ public class SettingsState extends GridState {
         textLabel.setFont(new Font("Arial", textSize));
         ColorAdjust bright = new ColorAdjust();
         bright.setBrightness(brightness);
-        this.view.currGrid.setEffect(bright);
+        bright.setContrast(Contrast);
         grid.setEffect(bright);
+        if (!mute)
+            this.view.backgroundMusic.adjustVolume(0.8);
+        else
+            this.view.backgroundMusic.adjustVolume(0.0);
 
         switch (Backgcolor) {
             case "Black":
@@ -225,7 +244,11 @@ public class SettingsState extends GridState {
     public void addExitEvent() {
         exitButton.setOnAction(e -> {
             grid.requestFocus();
-            this.view.changeState("Traversal");
+
+            if(this.view.inTrollGame)
+                this.view.changeState("Troll");
+            else
+                this.view.changeState("Traversal");
         });
     }
 
@@ -291,29 +314,38 @@ public class SettingsState extends GridState {
     }
 
     private void toggleHighContrastMode() {
-        if (highContrastModeOn) {
+        if (HighContrastMode) {
             // If high contrast mode is on, turn it off
-            highContrastModeOn = false;
-            highContrastButton.setStyle("-fx-background-color: red;");
-            highContrastEffect.setContrast(0); // Reset contrast
-            highContrastEffect.setBrightness(0); // Reset brightness
-            highContrastEffect.setSaturation(0); // Reset saturation
-
+            HighContrastMode = false;
+            Contrast = 0.0;
+            updateScene("");
+            highContrastButton.setStyle("-fx-background-color: red; -fx-text-fill: white;");
         } else {
             // If high contrast mode is off, turn it on
-            highContrastModeOn = true;
-            highContrastButton.setStyle("-fx-background-color: green;");
-            highContrastEffect.setContrast(0.7); // Increase contrast
-            highContrastEffect.setBrightness(0.5); // Decrease brightness
-            highContrastEffect.setSaturation(0.0); // Increase saturation
+            HighContrastMode = true;
+            Contrast = 1.0;
+            updateScene("");
+            highContrastButton.setStyle("-fx-background-color: green; -fx-text-fill: white;");
+
         }
 
-        // Apply the high contrast effect to the grid and other elements
-        applyHighContrastEffect();
     }
 
-    private void applyHighContrastEffect() {
-        grid.setEffect(highContrastEffect);
+    public void addMuteEvent() {
+        muteButton.setOnAction(e -> {
+            grid.requestFocus();
+            if(this.mute) {
+                this.mute = !this.mute;
+                muteButton.setStyle("-fx-background-color: green; -fx-text-fill: white;");
+            }
+            else {
+                this.mute = !this.mute;
+                muteButton.setStyle("-fx-background-color: red; -fx-text-fill: white;");
+            }
+
+            updateScene("");
+
+        });
     }
 
 }

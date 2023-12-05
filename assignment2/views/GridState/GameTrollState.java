@@ -33,12 +33,11 @@ import static javafx.scene.paint.Paint.valueOf;
 
 public class GameTrollState extends TrollState {
 
-    Button saveButton, loadButton, replayButton, settingsButton; //buttons
+    Button settingsButton; //buttons
     Boolean helpToggle = false; //is help on display?
 
     Label trollStatusLabel, playerStatusLabel, trollHPLabel, playerHPLabel, trollBaseAttack, playerBaseAttack, playerBaseDefense, playerLivesLabel, commandLabel;
     String trollSpeak = "You, puny human, dare to come on this path?\n" +
-                        "These chambers are only meant for the strong– and no human is strong.\n" +
                         "These chambers are only meant for the strong– and no human is strong.\n" +
                         "Oho? I see that you can use some magic. Very well, then.\n" +
                         "Let us see how your magic matches up to my strength.\n\n" +
@@ -75,6 +74,7 @@ public class GameTrollState extends TrollState {
 
     String[] commandList = new String[2];
 
+    VBox textEntry = new VBox();
 
     public GameTrollState(String name, AdventureGameView view, Player player)
     {
@@ -113,26 +113,6 @@ public class GameTrollState extends TrollState {
         grid.getRowConstraints().addAll( row1 , row2 , row3 );
 
         // Top Buttons
-        saveButton = new Button("Save");
-        saveButton.setId("Save");
-        saveButton.setFont(new Font("Arial", textSize));
-        customizeButton(saveButton, 100, 50);
-        AdventureGameView.makeButtonAccessible(saveButton, "Save Button", "This button saves the game.", "This button saves the game. Click it in order to save your current progress, so you can play more later.");
-        addSaveEvent();
-
-        loadButton = new Button("Load");
-        loadButton.setId("Load");
-        loadButton.setFont(new Font("Arial", textSize));
-        customizeButton(loadButton, 100, 50);
-        AdventureGameView.makeButtonAccessible(loadButton, "Load Button", "This button loads a game from a file.", "This button loads the game from a file. Click it in order to load a game that you saved at a prior date.");
-        addLoadEvent();
-
-        replayButton = new Button("Replay");
-        replayButton.setId("Replay");
-        replayButton.setFont(new Font("Arial", textSize));
-        customizeButton(replayButton, 100, 50);
-        AdventureGameView.makeButtonAccessible(loadButton, "Replay Button", "This button replays audio.", "This button replays the room description audio.");
-        addReplayEvent();
 
         settingsButton = new Button("Settings");
         settingsButton.setId("Settings");
@@ -142,7 +122,7 @@ public class GameTrollState extends TrollState {
         addSettingsEvent();
 
         HBox topButtons = new HBox();
-        topButtons.getChildren().addAll(saveButton, loadButton, replayButton, settingsButton);
+        topButtons.getChildren().addAll(settingsButton);
         topButtons.setSpacing(10);
         topButtons.setAlignment(Pos.CENTER);
 
@@ -227,7 +207,6 @@ public class GameTrollState extends TrollState {
         addTextHandlingEvent(); //attach an event to this input field
 
         // adding the text area and submit button to a VBox
-        VBox textEntry = new VBox();
         textEntry.setStyle("-fx-background-color: #000000;");
         textEntry.setPadding(new Insets(20, 20, 20, 20));
         textEntry.getChildren().addAll(commandLabel, inputTextField);
@@ -342,6 +321,9 @@ public class GameTrollState extends TrollState {
         inputTextField.setFont(new Font("Arial", textSize));
         playerHPLabel.setText("Player HP: " + playerHP);
         trollHPLabel.setText("Troll HP: " + trollHP);
+
+        playerBaseAttack.setText("Player Base Attack: " + player.getAttackPower());
+        playerBaseDefense.setText("Player Base Defense: " + player.getDefensePower());
         playerLivesLabel.setText("Player Lives: " + player.getLives());
 
         mainText.setText(s);
@@ -356,11 +338,67 @@ public class GameTrollState extends TrollState {
         ScrollPane toScroll = new ScrollPane(mainText);
         toScroll.setStyle("-fx-background: rgb(0,0,0)");
         grid.add(toScroll, 1, 1, 1,1);
+        switch (Backgcolor) {
+            case "Black":
+                grid.setBackground(new Background(new BackgroundFill(
+                        Color.BLACK,
+                        new CornerRadii(0),
+                        new Insets(0)
+                )));
+                commandLabel.setTextFill(Color.BLACK);
+                textEntry.setStyle("-fx-background-color: black;");
+                mainText.setStyle("-fx-background: black; -fx-background-color:black;");
+                toScroll.setStyle("-fx-background: black");
+
+                break;
+            case "Grey":
+                grid.setBackground(new Background(new BackgroundFill(
+                        Color.GREY,
+                        new CornerRadii(0),
+                        new Insets(0)
+                )));
+                commandLabel.setTextFill(Color.GREY);
+                textEntry.setStyle("-fx-background-color: grey;");
+                mainText.setStyle("-fx-background: grey; -fx-background-color:grey;");
+                toScroll.setStyle("-fx-background: grey");
+
+                break;
+            case "Pink":
+                grid.setBackground(new Background(new BackgroundFill(
+                        Color.PINK,
+                        new CornerRadii(0),
+                        new Insets(0)
+                )));
+                commandLabel.setTextFill(Color.PINK);
+                textEntry.setStyle("-fx-background-color: pink;");
+                mainText.setStyle("-fx-background: pink; -fx-background-color:pink;");
+                toScroll.setStyle("-fx-background: pink");
+
+                break;
+            case "Orange":
+                grid.setBackground(new Background(new BackgroundFill(
+                        Color.ORANGE,
+                        new CornerRadii(0),
+                        new Insets(0)
+                )));
+                commandLabel.setTextFill(Color.ORANGE);
+                textEntry.setStyle("-fx-background-color: orange;");
+                mainText.setStyle("-fx-background: orange; -fx-background-color:orange;");
+                toScroll.setStyle("-fx-background: orange");
+                break;
+            default:
+                // Handle unknown color
+                break;
+        }
+
+
 
 
         ColorAdjust bright = new ColorAdjust();
         bright.setBrightness(brightness);
+        bright.setContrast(Contrast);
         grid.setEffect(bright);
+
         this.view.stage.sizeToScene();
     }
 
@@ -377,6 +415,12 @@ public class GameTrollState extends TrollState {
     @Override
     public boolean playGame() {
         if(trollHP <= 0) {
+            this.trollHP = 0;
+
+            if(this.playerHP <= 0) {
+                this.playerHP = 1;
+            }
+
             updateScene("YOU HAVE WON!!!!");
             mainText.setFont(new Font("Arial", 70));
 
@@ -389,6 +433,12 @@ public class GameTrollState extends TrollState {
             pause.play();
         }
         else if(playerHP <= 0) {
+            this.playerHP = 0;
+
+            if(this.trollHP <= 0) {
+                this.trollHP = 1;
+            }
+
             this.player.decreaseLives();
             updateScene("YOU HAVE LOST!!!!");
             mainText.setFont(new Font("Arial", 70));
@@ -485,39 +535,6 @@ public class GameTrollState extends TrollState {
         newText += "Enter your next move: ";
         updateScene(newText);
         turnCounter += 1;
-    }
-
-    /**
-     * This method handles the event related to the
-     * save button.
-     */
-    public void addSaveEvent() {
-        saveButton.setOnAction(e -> {
-            grid.requestFocus();
-            SaveView saveView = new SaveView(this.view);
-        });
-    }
-
-    /**
-     * This method handles the event related to the
-     * load button.
-     */
-    public void addLoadEvent() {
-        loadButton.setOnAction(e -> {
-            grid.requestFocus();
-            LoadView loadView = new LoadView(this.view);
-        });
-    }
-
-    /**
-     * This method handles the event related to the
-     * replay button.
-     */
-    public void addReplayEvent() {
-        replayButton.setOnAction(e -> {
-            grid.requestFocus();
-            // Needs to be implemented
-        });
     }
 
     /**
