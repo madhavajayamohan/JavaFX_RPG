@@ -265,7 +265,7 @@ public class TraversalState extends GridStateWithItems
         //try to move!
         String output = this.view.model.interpretAction(text); //process the command!
 
-        if (output == null || (!output.equals("GAME OVER") && !output.equals("FORCED") && !output.equals("HELP") && !output.equals("TROLL"))) {
+        if (output == null || (!output.equals("GAME OVER") && !output.equals("POISONED") && !output.equals("IMMUNE") && !output.equals("FORCED") && !output.equals("HELP") && !output.equals("TROLL"))) {
             updateScene(output);
             updateItems();
             for (Node x : grid.getChildren()) {
@@ -314,8 +314,24 @@ public class TraversalState extends GridStateWithItems
                 submitEvent("FORCED");
             });
             pause.play();
+        } else if (output.equals("POISONED")) {
+            updateScene("You have been POISONED!");
+            PauseTransition pause = new PauseTransition(Duration.seconds(2));
+            pause.setOnFinished(event -> {
+                updateScene("");
+            });
+            pause.play();
+        } else if (output.equals("IMMUNE")) {
+            System.out.println("IMMUNETEST");
+            updateScene("You are IMMUNE! Posion takes no effect!");
+            PauseTransition pause = new PauseTransition(Duration.seconds(2));
+            pause.setOnFinished(event -> {
+                updateScene("");
+            });
+            pause.play();
         }
     }
+
 
     /**
      * showCommands

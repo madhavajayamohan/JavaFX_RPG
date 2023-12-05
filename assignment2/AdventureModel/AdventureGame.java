@@ -136,16 +136,19 @@ public class AdventureGame implements Serializable {
 
         int roomNumber = chosen.getDestinationRoom();
         Room room = this.rooms.get(roomNumber);
+        this.player.setCurrentRoom(room);
         if (room.getDebuff() && !this.player.getImmunity()) {
             if (room.getRoomNumber() % 2 == 0) {
-                playerChange(2, this.player);
+                playerChange(2);
+                return 10000;
             } else {
-                playerChange(3, this.player);
+                playerChange(3);
+                return 10000;
             }
         } else if (room.getDebuff()) {
             this.player.setImmunity(false);
+            return 10001;
         }
-        this.player.setCurrentRoom(room);
 
         if (room.getRoomName().equals("Troll"))
             return 2;
@@ -179,6 +182,12 @@ public class AdventureGame implements Serializable {
             } //something is up here! We are dead or we won.
             else if (movePlayerResult == 2) {
                 return "TROLL";
+            }
+            else if (movePlayerResult == 10000) {
+                return "POISONED";
+            }
+            else if (movePlayerResult == 10001) {
+                return "IMMUNE";
             }
             return null;
         } else if (Arrays.asList(this.actionVerbs).contains(inputArray[0])) {
@@ -237,9 +246,9 @@ public class AdventureGame implements Serializable {
                     if (inputArray[1].contains("IMMUNITY")) {
                         this.player.setImmunity(true);
                     } else if (inputArray[1].contains("ATTACK")) {
-                        playerChange(0, this.player);
+                        playerChange(0);
                     } else if (inputArray[1].contains("DEFENSE")) {
-                        playerChange(1, this.player);
+                        playerChange(1);
                     }
                     return "YOU HAVE USED: \n " + inputArray[1];
                 } else {
@@ -314,7 +323,7 @@ public class AdventureGame implements Serializable {
         this.helpText = help;
     }
 
-    public void playerChange(int type, Player player) {
+    public void playerChange(int type) {
         if (this.player instanceof PlayerDecorator) {
             this.player = ((PlayerDecorator) this.player).getDefaultPlayer();
         }
